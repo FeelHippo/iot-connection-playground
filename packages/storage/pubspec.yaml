@@ -1,0 +1,15 @@
+name: storage
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.1.0 <4.0.0"
+dependencies:
+  shared_preferences: ^2.2.2
+
+  apiClient:
+    path: ../api_client
+
+dev_dependencies:
+  flutter_lints: ^2.0.1
+  lints: ^2.0.1
+  very_good_analysis: ^3.1.0
