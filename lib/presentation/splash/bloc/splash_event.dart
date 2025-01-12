@@ -4,6 +4,13 @@ abstract class SplashEvent extends Equatable {
   const SplashEvent();
 }
 
+class IntroEvent extends SplashEvent {
+  const IntroEvent();
+
+  @override
+  List<Object> get props => <Object>[];
+}
+
 class CheckLoginEvent extends SplashEvent {
   const CheckLoginEvent();
 

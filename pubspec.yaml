@@ -64,3 +64,4 @@ flutter:
     - .env
     - assets/
     - assets/files/
+    - assets/images/

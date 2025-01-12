@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_active/injector.dart';
-import 'package:go_active/presentation/onboarding/auth_bloc/auth_bloc.dart';
+import 'package:go_active/presentation/onboarding/auth/auth_bloc/auth_bloc.dart';
+import 'package:go_active/presentation/onboarding/intro/intro_screen.dart';
 import 'package:go_active/presentation/widgets/circular_progress_bar.dart';
 import 'package:go_active/presentation/widgets/custom_navigator.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,7 @@ class AuthStateWidget extends StatelessWidget {
       // TODO(Filippo): define DeleteAccountConfirmScreen()
       child = Container();
     } else if (auth is UnauthorizedAuthUiModel) {
-      // TODO(Filippo): define OnboardingScreen()
-      child = Container();
+      child = IntroScreen();
     } else if (auth is AuthorizedAuthUiModel) {
       // TODO(Filippo): define HomeScreen()
       // child = _buildHomeScreen();

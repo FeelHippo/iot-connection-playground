@@ -8,17 +8,17 @@ part 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   SplashBloc() : super(const InitialSplashState()) {
-    on<SplashEvent>(handleSplashEvent);
+    on<IntroEvent>(handleSplashEvent);
   }
 
   Future<void> handleSplashEvent(
-    SplashEvent event,
+    IntroEvent event,
     Emitter<SplashState> emit,
   ) async {
     emit(const LoadingSplashState());
 
-    await Future<void>.delayed(const Duration(seconds: 2));
+    await Future<void>.delayed(const Duration(seconds: 3));
 
-    emit(const SplashToPromoState());
+    emit(const SplashToRegistrationState());
   }
 }
