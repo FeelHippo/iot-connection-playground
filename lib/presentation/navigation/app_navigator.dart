@@ -1,8 +1,5 @@
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
-import 'package:go_active/presentation/home/bottom_navigator_controller.dart';
-import 'package:go_active/presentation/navigation/widgets/custom_popup_route.dart';
-import 'package:go_active/presentation/navigation/widgets/custom_route.dart';
 import 'package:provider/provider.dart';
 
 import 'app_routes.dart';
@@ -15,21 +12,14 @@ class AppNavigator {
   }
 
   final GlobalKey<NavigatorState> navigatorKey;
-  final BottomNavigationController bottomNavigationController;
 
   AppNavigator(
     this.navigatorKey,
-    this.bottomNavigationController,
   );
 
   @optionalTypeArgs
   Future<T?> push<T extends Object?>(AppRoute<T>? appRoute,
       {Object? arguments}) async {
-    final bool isNavigated = _navigateRootRoutes(appRoute);
-    if (isNavigated) {
-      return null;
-    }
-
     final BuildContext? currentContext = navigatorKey.currentContext;
     if (currentContext == null) {
       Fimber.d('navigator context is null');
@@ -51,11 +41,6 @@ class AppNavigator {
   }
 
   Future<T?> pushReplacement<T extends Object?>(AppRoute<T>? appRoute) async {
-    final bool isNavigated = _navigateRootRoutes(appRoute);
-    if (isNavigated) {
-      return null;
-    }
-
     final BuildContext? currentContext = navigatorKey.currentContext;
     if (currentContext == null) {
       Fimber.d('navigator context is null');
@@ -80,72 +65,63 @@ class AppNavigator {
     navigatorKey.currentState?.pop(result);
   }
 
-  bool _navigateRootRoutes(AppRoute<dynamic>? appRoute) {
-    if (appRoute == AppRoutes.dashboard) {
-      popUntilRoot();
-      bottomNavigationController.showDashboard();
-      return true;
-    }
-    return false;
-  }
-
   /// navigatePage
-  static Future<dynamic> navigatePage({
-    required Widget className,
-    required BuildContext context,
-    bool isReplace = false,
-    VoidCallback? onClose,
-    bool isBottomSheet = false,
-    bool shouldSwipeToCloseWidget = true,
-  }) async {
-    if (isBottomSheet) {
-      return !isReplace
-          ? Navigator.push(
-              context,
-              CustomPopupRoute<Widget>(
-                  widgetBuilder: (_) => className,
-                  enableDragToDismiss: shouldSwipeToCloseWidget),
-            ).then((_) {
-              if (onClose != null) {
-                onClose();
-              }
-            })
-          : Navigator.pushReplacement(
-              context,
-              CustomPopupRoute<Widget>(
-                widgetBuilder: (_) => className,
-              ),
-            ).then((_) {
-              if (onClose != null) {
-                onClose();
-              }
-            });
-    } else {
-      return !isReplace
-          ? Navigator.push(
-              context,
-              CustomRoute<Widget>(
-                isProvider: false,
-                builder: (_) => className,
-              ),
-            ).then((_) {
-              if (onClose != null) {
-                onClose();
-              }
-            })
-          : Navigator.pushReplacement(
-              context,
-              CustomRoute<Widget>(
-                isProvider: false,
-                builder: (_) => className,
-              ),
-            ).then((_) {
-              if (onClose != null) {
-                onClose();
-              }
-            });
-    }
-  }
+  // static Future<dynamic> navigatePage({
+  //   required Widget className,
+  //   required BuildContext context,
+  //   bool isReplace = false,
+  //   VoidCallback? onClose,
+  //   bool isBottomSheet = false,
+  //   bool shouldSwipeToCloseWidget = true,
+  // }) async {
+  //   if (isBottomSheet) {
+  //     return !isReplace
+  //         ? Navigator.push(
+  //             context,
+  //             CustomPopupRoute<Widget>(
+  //                 widgetBuilder: (_) => className,
+  //                 enableDragToDismiss: shouldSwipeToCloseWidget),
+  //           ).then((_) {
+  //             if (onClose != null) {
+  //               onClose();
+  //             }
+  //           })
+  //         : Navigator.pushReplacement(
+  //             context,
+  //             CustomPopupRoute<Widget>(
+  //               widgetBuilder: (_) => className,
+  //             ),
+  //           ).then((_) {
+  //             if (onClose != null) {
+  //               onClose();
+  //             }
+  //           });
+  //   } else {
+  //     return !isReplace
+  //         ? Navigator.push(
+  //             context,
+  //             CustomRoute<Widget>(
+  //               isProvider: false,
+  //               builder: (_) => className,
+  //             ),
+  //           ).then((_) {
+  //             if (onClose != null) {
+  //               onClose();
+  //             }
+  //           })
+  //         : Navigator.pushReplacement(
+  //             context,
+  //             CustomRoute<Widget>(
+  //               isProvider: false,
+  //               builder: (_) => className,
+  //             ),
+  //           ).then((_) {
+  //             if (onClose != null) {
+  //               onClose();
+  //             }
+  //           });
+  //   }
+  // }
 
   void popUntilRoot() {
     navigatorKey.currentState

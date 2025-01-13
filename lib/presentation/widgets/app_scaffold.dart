@@ -10,7 +10,7 @@ class AppScaffold extends StatefulWidget {
     super.key,
     required this.body,
     this.appBar,
-    this.systemUiOverlayStyleIOS,
+    this.systemUiOverlayStyleIOS = SystemUiOverlayStyle.light,
     this.bottomNavigationBar,
     this.resizeToAvoidBottomPadding = true,
   });

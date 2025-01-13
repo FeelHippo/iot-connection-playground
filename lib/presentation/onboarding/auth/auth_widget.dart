@@ -48,11 +48,30 @@ class AuthStateWidget extends StatelessWidget {
       // TODO(Filippo): define DeleteAccountConfirmScreen()
       child = Container();
     } else if (auth is UnauthorizedAuthUiModel) {
-      child = IntroScreen();
+      child = CustomNavigator(
+        navigatorKey: rootNavigatorKey,
+        onGenerateRoute: (_) => PageRouteBuilder<dynamic>(
+          pageBuilder: (_, __, ___) => IntroScreen(
+            rootNavigatorKey: rootNavigatorKey,
+          ),
+        ),
+      );
     } else if (auth is AuthorizedAuthUiModel) {
       // TODO(Filippo): define HomeScreen()
-      // child = _buildHomeScreen();
-      child = Container();
+      child = Consumer<IOC>(
+        builder: (BuildContext context, IOC ioc, Widget? child) {
+          return CustomNavigator(
+            navigatorKey: rootNavigatorKey,
+            onGenerateRoute: (_) => PageRouteBuilder<dynamic>(
+                pageBuilder: (_, __, ___) => Container()
+                //     HomeScreen(
+                //   rootNavigatorKey: rootNavigatorKey,
+                //   userPreferences: ioc.getDependency<UserPreferences>(),
+                // ),
+                ),
+          );
+        },
+      );
     } else {
       child = const Scaffold(
         body: Center(
@@ -61,22 +80,5 @@ class AuthStateWidget extends StatelessWidget {
       );
     }
     return child;
-  }
-
-  Widget _buildHomeScreen() {
-    return Consumer<IOC>(
-      builder: (BuildContext context, IOC ioc, Widget? child) {
-        return CustomNavigator(
-          navigatorKey: rootNavigatorKey,
-          onGenerateRoute: (_) =>
-              PageRouteBuilder<dynamic>(pageBuilder: (_, __, ___) => Container()
-                  //     HomeScreen(
-                  //   rootNavigatorKey: rootNavigatorKey,
-                  //   userPreferences: ioc.getDependency<UserPreferences>(),
-                  // ),
-                  ),
-        );
-      },
-    );
   }
 }

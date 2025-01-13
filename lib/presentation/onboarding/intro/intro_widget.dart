@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_active/presentation/navigation/app_navigator.dart';
-import 'package:go_active/presentation/onboarding/carousel/carousel_widget.dart';
+import 'package:go_active/presentation/navigation/app_routes.dart';
 import 'package:go_active/presentation/splash/bloc/splash_bloc.dart';
 import 'package:go_active/utils/assets.dart';
 
@@ -67,10 +67,7 @@ class IntroWidget extends StatelessWidget {
       },
       listener: (BuildContext context, SplashState state) async {
         if (state is SplashToRegistrationState) {
-          AppNavigator.navigatePage(
-            context: context,
-            className: CarouselWidget(),
-          );
+          AppNavigator.of(context).push(AppRoutes.carouselScreen());
         }
       },
     );

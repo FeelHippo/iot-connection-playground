@@ -26,7 +26,8 @@ class _CustomNavigatorState extends State<CustomNavigator>
     WidgetsBinding.instance.addObserver(this);
   }
 
-  // A system method that get invoked when user press back button on Android or back slide on iOS
+  // A system method that gets invoked when a user presses:
+  // back button on Android OR back slide on iOS
   @override
   Future<bool> didPopRoute() async {
     assert(mounted);

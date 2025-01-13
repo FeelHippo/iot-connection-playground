@@ -51,17 +51,13 @@ class CustomPopupRoute<T> extends ModalSheetRoute<T> {
   }
 
   Widget _buildContainer(BuildContext context, Widget child) {
-    final BottomSheetThemeData bottomSheetTheme =
-        Theme.of(context).bottomSheetTheme;
     final Color color =
         Colors.redAccent; // TODO(Filippo): define custom Palette
-    final double effectiveElevation = bottomSheetTheme.elevation ?? 0.0;
 
     return SafeArea(
       bottom: false,
       child: Material(
         color: color,
-        elevation: effectiveElevation,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16),

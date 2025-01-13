@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_active/presentation/navigation/app_navigator.dart';
 import 'package:go_active/presentation/navigation/routes/dashboard.dart';
+import 'package:go_active/presentation/navigation/routes/onboarding.dart';
 
 abstract class AppRoutes {
   static AppRoute<dynamic> dashboard = AppDashboardRoutes.dashboard;
+  static AppRoute<dynamic> carouselScreen() =>
+      OnBoardingRoutes.carouselScreen();
 }
 
 class AppRoute<T> {
