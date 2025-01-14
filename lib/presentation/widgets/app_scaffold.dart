@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_active/presentation/widgets/connectivity_widget.dart';
+import 'package:giggle/presentation/widgets/connectivity_widget.dart';
 
 class AppScaffold extends StatefulWidget {
   const AppScaffold({

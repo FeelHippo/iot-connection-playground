@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_active/presentation/navigation/app_navigator.dart';
-import 'package:go_active/presentation/navigation/app_routes.dart';
-import 'package:go_active/presentation/splash/bloc/splash_bloc.dart';
-import 'package:go_active/utils/assets.dart';
+import 'package:giggle/presentation/navigation/app_navigator.dart';
+import 'package:giggle/presentation/navigation/app_routes.dart';
+import 'package:giggle/presentation/splash/bloc/splash_bloc.dart';
+import 'package:giggle/utils/assets.dart';
 
 class IntroWidget extends StatelessWidget {
   const IntroWidget({super.key, required this.bloc});

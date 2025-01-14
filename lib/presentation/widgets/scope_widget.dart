@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_active/injector.dart';
+import 'package:giggle/injector.dart';
 import 'package:provider/provider.dart';
 
 class ScopeWidget extends StatelessWidget {

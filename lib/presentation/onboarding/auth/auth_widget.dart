@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_active/injector.dart';
-import 'package:go_active/presentation/onboarding/auth/auth_bloc/auth_bloc.dart';
-import 'package:go_active/presentation/onboarding/intro/intro_screen.dart';
-import 'package:go_active/presentation/widgets/circular_progress_bar.dart';
-import 'package:go_active/presentation/widgets/custom_navigator.dart';
+import 'package:giggle/injector.dart';
+import 'package:giggle/presentation/onboarding/auth/auth_bloc/auth_bloc.dart';
+import 'package:giggle/presentation/onboarding/intro/intro_screen.dart';
+import 'package:giggle/presentation/widgets/circular_progress_bar.dart';
+import 'package:giggle/presentation/widgets/custom_navigator.dart';
 import 'package:provider/provider.dart';
 
 class AuthWidget extends StatelessWidget {

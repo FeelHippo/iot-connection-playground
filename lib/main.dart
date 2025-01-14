@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fimber/fimber.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:go_active/injector.dart';
-import 'package:go_active/presentation/splash/splash_screen.dart';
-import 'package:go_active/presentation/widgets/scope_widget.dart';
-import 'package:go_active/utils/dashboard_controller.dart';
+import 'package:giggle/injector.dart';
+import 'package:giggle/presentation/splash/splash_screen.dart';
+import 'package:giggle/presentation/themes/theme.dart';
+import 'package:giggle/presentation/widgets/scope_widget.dart';
+import 'package:giggle/utils/dashboard_controller.dart';
 
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(
@@ -22,7 +24,17 @@ Future<void> main() async {
       final IOC ioc = IOC.appScope();
 
       runApp(
-        AutoSenseApp(scope: ioc),
+        EasyLocalization(
+          supportedLocales: [
+            Locale('en'),
+            Locale('de'),
+            Locale('fr'),
+            Locale('it'),
+          ],
+          path: 'assets/translations',
+          fallbackLocale: Locale('en'),
+          child: GiggleApp(scope: ioc),
+        ),
       );
 
       Bloc.observer = SimpleBlocDelegate();
@@ -33,6 +45,7 @@ Future<void> main() async {
 }
 
 Future<void> setUp() async {
+  await EasyLocalization.ensureInitialized();
   await dotenv.load(
     fileName: '.env',
     mergeWith: Platform.environment,
@@ -46,8 +59,11 @@ class SimpleBlocDelegate extends BlocObserver {
   }
 }
 
-class AutoSenseApp extends StatelessWidget {
-  const AutoSenseApp({super.key, required this.scope});
+class GiggleApp extends StatelessWidget {
+  const GiggleApp({
+    super.key,
+    required this.scope,
+  });
   final IOC scope;
 
   @override
@@ -55,8 +71,10 @@ class AutoSenseApp extends StatelessWidget {
     return ScopeWidget(
       scope: scope,
       child: MaterialApp(
-        theme:
-            ThemeData(), // TODO(Filippo): define custom themes (dark + bright)
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        theme: AppTheme.lightTheme(),
         home: const SplashScreen(),
       ),
     );

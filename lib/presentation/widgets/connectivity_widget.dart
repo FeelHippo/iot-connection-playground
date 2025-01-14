@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:go_active/presentation/widgets/app_scaffold.dart';
+import 'package:giggle/presentation/widgets/app_scaffold.dart';
 
 class ConnectivityContainerWidget extends StatelessWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_active/presentation/navigation/app_navigator.dart';
-import 'package:go_active/presentation/navigation/routes/dashboard.dart';
-import 'package:go_active/presentation/navigation/routes/onboarding.dart';
+import 'package:giggle/presentation/navigation/app_navigator.dart';
+import 'package:giggle/presentation/navigation/routes/dashboard.dart';
+import 'package:giggle/presentation/navigation/routes/onboarding.dart';
 
 abstract class AppRoutes {
   static AppRoute<dynamic> dashboard = AppDashboardRoutes.dashboard;

@@ -41,7 +41,7 @@ flutter pub run build_runner build --delete-conflicting-outputs
 
 To build the "packages" folder, run:
 ```shell
-cd packages\api_client
+cd packages/api_client
 dart run build_runner clean
 dart run build_runner build --delete-conflicting-outputs
 ```
