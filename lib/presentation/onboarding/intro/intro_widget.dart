@@ -39,7 +39,7 @@ class IntroWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'GoActive \ntraining',
+                      'Giggle \ntraining',
                       style: TextStyle(
                         height: 0,
                         fontSize: 64,
