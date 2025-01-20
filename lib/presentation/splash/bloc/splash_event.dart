@@ -10,10 +10,3 @@ class IntroEvent extends SplashEvent {
   @override
   List<Object> get props => <Object>[];
 }
-
-class CheckLoginEvent extends SplashEvent {
-  const CheckLoginEvent();
-
-  @override
-  List<Object> get props => <Object>[];
-}

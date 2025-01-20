@@ -5,8 +5,7 @@ import 'package:giggle/presentation/navigation/routes/onboarding.dart';
 
 abstract class AppRoutes {
   static AppRoute<dynamic> dashboard = AppDashboardRoutes.dashboard;
-  static AppRoute<dynamic> carouselScreen() =>
-      OnBoardingRoutes.carouselScreen();
+  static AppRoute<dynamic> localesScreen() => OnBoardingRoutes.localesScreen();
 }
 
 class AppRoute<T> {

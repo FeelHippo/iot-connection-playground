@@ -40,7 +40,7 @@ class ButtonPrimary extends StatelessWidget {
       minWidth: MediaQuery.of(context).size.width,
       color: Palette.primary,
       disabledElevation: 0.5,
-      disabledColor: Palette.disabled,
+      disabledColor: Palette.grey500,
       elevation: 2,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -59,10 +59,7 @@ class ButtonPrimary extends StatelessWidget {
         text,
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
-        style: TextStyles.header4Bold(
-          color: Palette.white,
-          height: 1,
-        ),
+        style: TextStyles.h4Black,
       ),
     );
   }

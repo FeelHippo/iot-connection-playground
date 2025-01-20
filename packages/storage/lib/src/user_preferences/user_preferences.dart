@@ -30,4 +30,8 @@ abstract class UserPreferences {
   Future<void> clearAuth();
 
   Future<String?> getRegisteredDeviceToken();
+
+  Future<void> putUserLocale(String locale);
+
+  Future<String?> getUserLocale();
 }

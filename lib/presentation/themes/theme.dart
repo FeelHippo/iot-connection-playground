@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:giggle/presentation/themes/constants/palette.dart';
-import 'package:giggle/presentation/themes/constants/spacings.dart';
 import 'package:giggle/presentation/themes/constants/text_styles.dart';
-import 'package:giggle/presentation/widgets/button_primary.dart';
 
 class AppTheme {
   static ThemeData lightTheme() {
@@ -16,62 +13,18 @@ class AppTheme {
         onPrimary: Palette.white,
         secondary: Palette.secondary,
         onSecondary: Palette.white,
-        surface: Palette.white,
+        surface: Palette.primary,
         onSurface: Palette.grey800,
         error: Palette.error,
         onError: Palette.white,
       ),
       primaryColor: Palette.primary,
+      canvasColor: Palette.primary,
       highlightColor: Palette.primary.withAlpha(Palette.opacity20),
-      splashColor: Palette.primary.withAlpha(Palette.opacity20),
+      splashColor: Palette.primary,
       fontFamily: TextStyles.fontFamily,
-      scaffoldBackgroundColor: Palette.grey100,
-      textTheme: TextTheme(
-        labelLarge: TextStyles.paragraphRegular(),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Palette.primary,
-          minimumSize: Size(
-            88,
-            ButtonPrimary.defaultHeight,
-          ),
-          elevation: 2,
-        ),
-      ),
+      scaffoldBackgroundColor: Palette.primary,
       cupertinoOverrideTheme: cupertinoLightTheme(),
-      cardTheme: CardTheme(
-        elevation: 1,
-        color: Palette.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-        ),
-      ),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: Palette.primary,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: const _NoUnderlineInputBorder(),
-        fillColor: Palette.white,
-        contentPadding: const EdgeInsets.all(Spacings.medium),
-        filled: true,
-        hintStyle: TextStyles.header4Regular(color: Palette.grey50),
-        floatingLabelStyle: TextStyles.smallRegular(),
-        labelStyle: TextStyles.header4Regular(color: Palette.grey50),
-      ),
-      appBarTheme: AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle.dark,
-        backgroundColor: Palette.white,
-        elevation: 0,
-        centerTitle: true,
-        titleTextStyle: TextStyles.h3Black.copyWith(
-          fontFamily: TextStyles.fontFamily,
-        ),
-        iconTheme: IconThemeData(color: Palette.secondary),
-      ),
-      bottomSheetTheme: BottomSheetThemeData(
-        modalBackgroundColor: Palette.grey100,
-      ),
     );
   }
 

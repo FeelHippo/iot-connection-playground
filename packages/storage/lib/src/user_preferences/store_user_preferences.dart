@@ -8,8 +8,8 @@ class StoreUserPreferences extends UserPreferences {
   /// Session info
   static const String _key = 'current-user-id';
   static const String _keyDeviceToken = 'current-device-token';
-  static const String _prefLoginUserData = 'pref_login_user_data';
   static const String prefLoginUserData = 'pref_login_user_data';
+  static const String prefLocaleUserData = 'pref_locale_user_data';
   static String prefIsAccountDeleted = 'is_account_deleted';
 
   @override
@@ -22,6 +22,13 @@ class StoreUserPreferences extends UserPreferences {
   Future<void> putCurrentUserId(String id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_key, id);
+    return;
+  }
+
+  @override
+  Future<void> clearCurrentUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
     return;
   }
 
@@ -40,22 +47,27 @@ class StoreUserPreferences extends UserPreferences {
   }
 
   @override
-  Future<void> clearCurrentUserId() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_key);
-    return;
-  }
-
-  @override
   Future<void> clearAuth() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove(StoreUserPreferences._prefLoginUserData);
+    await prefs.remove(StoreUserPreferences.prefLoginUserData);
   }
 
   @override
   Future<String?> getRegisteredDeviceToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_keyDeviceToken);
+  }
+
+  @override
+  Future<void> putUserLocale(String locale) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(prefLocaleUserData, locale);
+  }
+
+  @override
+  Future<String?> getUserLocale() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(prefLocaleUserData);
   }
 
   @override

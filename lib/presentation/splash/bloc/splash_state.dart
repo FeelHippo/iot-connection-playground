@@ -18,15 +18,8 @@ class LoadingSplashState extends SplashState {
   List<Object> get props => <Object>[];
 }
 
-class SplashToLoginState extends SplashState {
-  const SplashToLoginState();
-
-  @override
-  List<Object> get props => <Object>[];
-}
-
-class SplashToRegistrationState extends SplashState {
-  const SplashToRegistrationState();
+class SplashToLocalisationState extends SplashState {
+  const SplashToLocalisationState();
 
   @override
   List<Object> get props => <Object>[];

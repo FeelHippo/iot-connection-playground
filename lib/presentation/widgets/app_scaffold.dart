@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:giggle/presentation/themes/constants/palette.dart';
 import 'package:giggle/presentation/widgets/connectivity_widget.dart';
 
 class AppScaffold extends StatefulWidget {
@@ -84,7 +85,6 @@ class AppScaffoldState extends State<AppScaffold> {
     return Scaffold(
       appBar: widget.appBar,
       resizeToAvoidBottomInset: widget.resizeToAvoidBottomPadding,
-      backgroundColor: Colors.blue, // TODO(Filippo): create Palette
       bottomNavigationBar: widget.bottomNavigationBar,
       body: Stack(
         children: <Widget>[
@@ -124,7 +124,6 @@ enum AppSnackBarSeverity {
   info,
   success,
   error,
-  freemium,
 }
 
 class AppSnackBar extends StatefulWidget {
@@ -243,15 +242,13 @@ class _AppSnackBarState extends State<AppSnackBar>
   Color _buildBackgroundColor() {
     switch (widget.severity) {
       case AppSnackBarSeverity.error:
-        return Colors.red; // TODO(Filippo): Palette.error;
+        return Palette.error;
       case AppSnackBarSeverity.info:
-        return Colors.blue; // TODO(Filippo): Palette.primary;
+        return Palette.info;
       case AppSnackBarSeverity.success:
-        return Colors.green; // TODO(Filippo): Palette.success;
-      case AppSnackBarSeverity.freemium:
-        return Colors.grey; // TODO(Filippo): Palette.grey50;
+        return Palette.success;
       case null:
-        return Colors.blue; // TODO(Filippo): Palette.primary;
+        return Palette.primary;
     }
   }
 
@@ -268,7 +265,7 @@ class _AppSnackBarState extends State<AppSnackBar>
   void _prepareAnimation() {
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 333),
     );
     _animation = CurvedAnimation(
       parent: _controller,

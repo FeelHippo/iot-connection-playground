@@ -1,12 +1,16 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giggle/presentation/navigation/app_navigator.dart';
 import 'package:giggle/presentation/navigation/app_routes.dart';
 import 'package:giggle/presentation/splash/bloc/splash_bloc.dart';
-import 'package:giggle/utils/assets.dart';
+import 'package:giggle/presentation/themes/constants/text_styles.dart';
 
 class IntroWidget extends StatelessWidget {
-  const IntroWidget({super.key, required this.bloc});
+  const IntroWidget({
+    super.key,
+    required this.bloc,
+  });
 
   final SplashBloc bloc;
 
@@ -15,59 +19,48 @@ class IntroWidget extends StatelessWidget {
     return BlocConsumer<SplashBloc, SplashState>(
       bloc: bloc,
       builder: (BuildContext context, SplashState state) {
-        return Stack(
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: ImageAssets.welcome(),
-            ),
-            Positioned(
-              bottom: 0,
-              height: MediaQuery.of(context).size.height / 2.5,
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Welcome to',
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xffffffff),
+        return SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        context.tr('welcome'),
+                        style: TextStyles.h2Black,
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    Text(
-                      'Giggle \ntraining',
-                      style: TextStyle(
-                        height: 0,
-                        fontSize: 64,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xffffffff),
+                      Text(
+                        context.tr('giggle'),
+                        style: TextStyles.h1Black,
                       ),
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Text(
-                      'The best AI running app in this century \nto accompany your training',
-                      style: TextStyle(
-                        height: 0,
-                        fontSize: 20,
-                        color: Color(0xffffffff),
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-          ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    context.tr('motto'),
+                    style: TextStyles.h2Black,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
       listener: (BuildContext context, SplashState state) async {
-        if (state is SplashToRegistrationState) {
-          AppNavigator.of(context).push(AppRoutes.carouselScreen());
+        if (state is SplashToLocalisationState) {
+          AppNavigator.of(context).push(AppRoutes.localesScreen());
         }
       },
     );
