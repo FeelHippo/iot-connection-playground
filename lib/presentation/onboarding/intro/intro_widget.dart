@@ -21,38 +21,42 @@ class IntroWidget extends StatelessWidget {
       builder: (BuildContext context, SplashState state) {
         return SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        context.tr('welcome'),
-                        style: TextStyles.h2Black,
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        context.tr('giggle'),
-                        style: TextStyles.h1Black,
-                      ),
-                    ],
-                  ),
-                ],
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text(
+                          context.tr('welcome'),
+                          style: TextStyles.h2Black,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          context.tr('giggle'),
+                          style: TextStyles.titleBlack,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height / 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    context.tr('motto'),
-                    style: TextStyles.h2Black,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                height: MediaQuery.of(context).size.height / 2.5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      context.tr('motto'),
+                      style: TextStyles.h2Black,
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

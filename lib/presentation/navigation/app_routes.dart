@@ -6,6 +6,8 @@ import 'package:giggle/presentation/navigation/routes/onboarding.dart';
 abstract class AppRoutes {
   static AppRoute<dynamic> dashboard = AppDashboardRoutes.dashboard;
   static AppRoute<dynamic> localesScreen() => OnBoardingRoutes.localesScreen();
+  static AppRoute<dynamic> termsAndConditionsScreen() =>
+      OnBoardingRoutes.termsAndConditionsScreen();
 }
 
 class AppRoute<T> {

@@ -10,6 +10,7 @@ import 'package:giggle/presentation/modules/data_module.dart';
 import 'package:giggle/presentation/modules/domain_module.dart';
 import 'package:giggle/presentation/modules/network_module.dart';
 import 'package:giggle/presentation/onboarding/auth/auth_bloc/auth_bloc.dart';
+import 'package:giggle/presentation/onboarding/locales/cubit.dart';
 import 'package:giggle/presentation/splash/bloc/splash_bloc.dart';
 import 'package:injector/injector.dart';
 import 'package:storage/main.dart';
@@ -60,6 +61,9 @@ class IOC {
     _registerSingleton<AuthProvider>(DataModule.createAuthProvider);
     _registerSingleton<LoginProvider>(DataModule.createLoginProvider);
     _registerSingleton<UserProvider>(DataModule.createUserProvider);
+    _registerSingleton<LocaleProviderInterface>(
+      DataModule.createLocaleStorageProvider,
+    );
 
     /// Data Mappers
     _registerDependency<SomethingMapper>(DataModule.createSomethingMapper);
@@ -79,6 +83,7 @@ class IOC {
     _registerSingleton<LoginInteractor>(DomainModule.createLoginInteractor);
 
     /// Blocs
+    _registerDependency<LocaleCubit>(BlocModule.createLocaleCubit);
     _registerDependency<AuthBloc>(
       BlocModule.createAuthBloc,
     );

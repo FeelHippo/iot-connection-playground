@@ -7,12 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:giggle/injector.dart';
+import 'package:giggle/presentation/onboarding/locales/cubit.dart';
 import 'package:giggle/presentation/splash/splash_screen.dart';
 import 'package:giggle/presentation/themes/theme.dart';
 import 'package:giggle/presentation/widgets/scope_widget.dart';
 import 'package:giggle/utils/dashboard_controller.dart';
-import 'package:giggle/utils/dotenv_utils.dart';
-import 'package:storage/main.dart';
 
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(
@@ -36,10 +35,7 @@ Future<void> main() async {
           path: 'assets/translations',
           fallbackLocale: Locale('en'),
           child: GiggleApp(scope: ioc),
-          startLocale: Locale(
-            await ioc.getDependency<UserPreferences>().getUserLocale() ??
-                DotenvUtils.getString('DEFAULT_LOCALE'),
-          ),
+          startLocale: ioc.getDependency<LocaleCubit>().state,
         ),
       );
 

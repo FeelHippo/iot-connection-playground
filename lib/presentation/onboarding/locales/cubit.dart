@@ -1,0 +1,24 @@
+import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:storage/main.dart';
+
+class LocaleCubit extends Cubit<Locale> {
+  LocaleCubit({
+    required this.localeProvider,
+  }) : super(Locale('en')) {
+    _getLocaleFromPrefs();
+  }
+
+  final LocaleProviderInterface localeProvider;
+
+  Future<void> saveThemeToPrefs({required Locale locale}) async {
+    localeProvider.writeLocaleToPrefs(locale.languageCode);
+  }
+
+  Future<void> _getLocaleFromPrefs() async {
+    final String? languageCode = await localeProvider.readLocaleFromPrefs();
+    if (languageCode != null) {
+      emit(Locale(languageCode));
+    }
+  }
+}

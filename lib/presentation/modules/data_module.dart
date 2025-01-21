@@ -33,4 +33,10 @@ class DataModule {
         ),
         injector.get<UserPreferences>(),
       );
+
+  static LocaleProviderInterface createLocaleStorageProvider(
+          Injector injector) =>
+      StoreLocaleProvider(
+        injector.get<UserPreferences>(),
+      );
 }
