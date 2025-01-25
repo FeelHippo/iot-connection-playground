@@ -16,76 +16,249 @@ class LocalesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocaleCubit, Locale>(
       listener: (BuildContext context, Locale state) {
-        AppNavigator.of(context).push(AppRoutes.termsAndConditionsScreen());
+        AppNavigator.of(context).push(
+          AppRoutes.termsAndConditionsScreen(),
+        );
       },
-      child: SafeArea(
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          GestureDetector(
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height / 4,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: ImageAssets.dialogueLeft().image,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Italiano',
-                                      style: TextStyles.h1BlackBold,
-                                    ),
-                                  ),
-                                ),
-                              ],
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            height: (MediaQuery.of(context).size.height / 2) - 124,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned(
+                  right: -12,
+                  bottom: -8,
+                  child: Container(
+                    height: (MediaQuery.of(context).size.height / 4) - 8,
+                    width: (MediaQuery.of(context).size.width / 2) - 8,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: ImageAssets.dialogueRight().image,
+                        invertColors: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 16,
+                  top: 16,
+                  child: Container(
+                    height: (MediaQuery.of(context).size.height / 4) - 8,
+                    width: (MediaQuery.of(context).size.width / 2) - 8,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: ImageAssets.dialogueLeft().image,
+                        invertColors: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 8,
+                  child: GestureDetector(
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 4) - 8,
+                      width: (MediaQuery.of(context).size.width / 2) - 8,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: ImageAssets.dialogueLeft().image,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment(0, -0.1),
+                        child: Text(
+                          'Italiano',
+                          style: TextStyles.h2BlackBold,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<LocaleCubit>().saveLocaleToPrefs(
+                            locale: Locale(
+                              'it',
                             ),
-                            onTap: () {
-                              context
-                                  .read<LocaleCubit>()
-                                  .saveThemeToPrefs(locale: Locale('it'));
-                            },
-                          ),
-                        ],
-                      ),
-                      Text(
-                        context.tr('giggle'),
-                        style: TextStyles.titleBlack,
-                      ),
-                    ],
+                          );
+                    },
                   ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 2.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    context.tr('motto'),
-                    style: TextStyles.h2Black,
-                    textAlign: TextAlign.center,
+                ),
+                Positioned(
+                  right: 8,
+                  bottom: 8,
+                  child: GestureDetector(
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 4) - 8,
+                      width: (MediaQuery.of(context).size.width / 2) - 8,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: ImageAssets.dialogueRight().image,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment(0, -0.1),
+                        child: Text(
+                          'Français',
+                          style: TextStyles.h2BlackBold,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<LocaleCubit>().saveLocaleToPrefs(
+                            locale: Locale(
+                              'fr',
+                            ),
+                          );
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 124,
+            child: Text(
+              context.tr('giggle'),
+              style: TextStyles.titleBlack,
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned(
+                  left: 16,
+                  bottom: -16,
+                  child: Container(
+                    height: (MediaQuery.of(context).size.height / 4) - 8,
+                    width: (MediaQuery.of(context).size.width / 2) - 8,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: ImageAssets.dialogueLeft().image,
+                        invertColors: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: -8,
+                  top: 8,
+                  child: Container(
+                    height: (MediaQuery.of(context).size.height / 4) - 8,
+                    width: (MediaQuery.of(context).size.width / 2) - 8,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: ImageAssets.dialogueLeft().image,
+                        invertColors: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 112,
+                  right: 16,
+                  child: Container(
+                    height: (MediaQuery.of(context).size.height / 4) - 8,
+                    width: (MediaQuery.of(context).size.width / 2) - 8,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: ImageAssets.dialogueLeft().image,
+                        invertColors: true,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: -24,
+                  child: GestureDetector(
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 4) - 8,
+                      width: (MediaQuery.of(context).size.width / 2) - 8,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: ImageAssets.dialogueLeft().image,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment(0, -0.1),
+                        child: Text(
+                          'English',
+                          style: TextStyles.h2BlackBold,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<LocaleCubit>().saveLocaleToPrefs(
+                            locale: Locale(
+                              'en',
+                            ),
+                          );
+                    },
+                  ),
+                ),
+                Positioned(
+                  bottom: 120,
+                  right: 8,
+                  child: GestureDetector(
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 4) - 8,
+                      width: (MediaQuery.of(context).size.width / 2) - 8,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: ImageAssets.dialogueLeft().image,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment(0, -0.1),
+                        child: Text(
+                          'Deutsch',
+                          style: TextStyles.h2BlackBold,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<LocaleCubit>().saveLocaleToPrefs(
+                            locale: Locale(
+                              'de',
+                            ),
+                          );
+                    },
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 8,
+                  child: GestureDetector(
+                    child: Container(
+                      height: (MediaQuery.of(context).size.height / 4) - 8,
+                      width: (MediaQuery.of(context).size.width / 2) - 8,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: ImageAssets.dialogueLeft().image,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment(0, -0.1),
+                        child: Text(
+                          'Espagnol',
+                          style: TextStyles.h2BlackBold,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      context.read<LocaleCubit>().saveLocaleToPrefs(
+                            locale: Locale(
+                              'es',
+                            ),
+                          );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

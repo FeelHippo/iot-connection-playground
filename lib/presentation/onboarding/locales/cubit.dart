@@ -6,13 +6,15 @@ class LocaleCubit extends Cubit<Locale> {
   LocaleCubit({
     required this.localeProvider,
   }) : super(Locale('en')) {
-    _getLocaleFromPrefs();
+    // TODO(Filippo): uncomment the below
+    // _getLocaleFromPrefs();
   }
 
   final LocaleProviderInterface localeProvider;
 
-  Future<void> saveThemeToPrefs({required Locale locale}) async {
+  Future<void> saveLocaleToPrefs({required Locale locale}) async {
     localeProvider.writeLocaleToPrefs(locale.languageCode);
+    emit(locale);
   }
 
   Future<void> _getLocaleFromPrefs() async {

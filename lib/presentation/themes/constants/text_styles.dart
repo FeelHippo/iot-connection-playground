@@ -36,6 +36,14 @@ class TextStyles {
     height: 1.5,
   );
 
+  static TextStyle h2BlackBold = TextStyle(
+    color: Palette.black,
+    fontSize: 32,
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    height: 1.5,
+  );
+
   static TextStyle h3Black = TextStyle(
     color: Palette.black,
     fontSize: 24,
