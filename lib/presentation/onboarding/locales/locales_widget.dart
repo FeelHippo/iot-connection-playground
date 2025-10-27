@@ -1,24 +1,19 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:giggle/presentation/navigation/app_navigator.dart';
-import 'package:giggle/presentation/navigation/app_routes.dart';
-import 'package:giggle/presentation/onboarding/locales/cubit.dart';
+import 'package:giggle/bloc/locales/cubit.dart';
 import 'package:giggle/presentation/themes/constants/text_styles.dart';
 import 'package:giggle/utils/assets.dart';
+import 'package:go_router/go_router.dart';
 
 class LocalesWidget extends StatelessWidget {
-  const LocalesWidget({
-    super.key,
-  });
+  const LocalesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LocaleCubit, Locale>(
       listener: (BuildContext context, Locale state) {
-        AppNavigator.of(context).push(
-          AppRoutes.termsAndConditionsScreen(),
-        );
+        context.go('register');
       },
       child: Column(
         children: <Widget>[
@@ -68,18 +63,13 @@ class LocalesWidget extends StatelessWidget {
                       ),
                       child: Align(
                         alignment: Alignment(0, -0.1),
-                        child: Text(
-                          'Italiano',
-                          style: TextStyles.h2BlackBold,
-                        ),
+                        child: Text('Italiano', style: TextStyles.h2BlackBold),
                       ),
                     ),
                     onTap: () {
                       context.read<LocaleCubit>().saveLocaleToPrefs(
-                            locale: Locale(
-                              'it',
-                            ),
-                          );
+                        locale: Locale('it'),
+                      );
                     },
                   ),
                 ),
@@ -97,18 +87,13 @@ class LocalesWidget extends StatelessWidget {
                       ),
                       child: Align(
                         alignment: Alignment(0, -0.1),
-                        child: Text(
-                          'Français',
-                          style: TextStyles.h2BlackBold,
-                        ),
+                        child: Text('Français', style: TextStyles.h2BlackBold),
                       ),
                     ),
                     onTap: () {
                       context.read<LocaleCubit>().saveLocaleToPrefs(
-                            locale: Locale(
-                              'fr',
-                            ),
-                          );
+                        locale: Locale('fr'),
+                      );
                     },
                   ),
                 ),
@@ -117,10 +102,7 @@ class LocalesWidget extends StatelessWidget {
           ),
           SizedBox(
             height: 124,
-            child: Text(
-              context.tr('giggle'),
-              style: TextStyles.titleBlack,
-            ),
+            child: Text(context.tr('giggle'), style: TextStyles.titleBlack),
           ),
           SizedBox(
             height: MediaQuery.of(context).size.height / 2,
@@ -182,18 +164,13 @@ class LocalesWidget extends StatelessWidget {
                       ),
                       child: Align(
                         alignment: Alignment(0, -0.1),
-                        child: Text(
-                          'English',
-                          style: TextStyles.h2BlackBold,
-                        ),
+                        child: Text('English', style: TextStyles.h2BlackBold),
                       ),
                     ),
                     onTap: () {
                       context.read<LocaleCubit>().saveLocaleToPrefs(
-                            locale: Locale(
-                              'en',
-                            ),
-                          );
+                        locale: Locale('en'),
+                      );
                     },
                   ),
                 ),
@@ -211,18 +188,13 @@ class LocalesWidget extends StatelessWidget {
                       ),
                       child: Align(
                         alignment: Alignment(0, -0.1),
-                        child: Text(
-                          'Deutsch',
-                          style: TextStyles.h2BlackBold,
-                        ),
+                        child: Text('Deutsch', style: TextStyles.h2BlackBold),
                       ),
                     ),
                     onTap: () {
                       context.read<LocaleCubit>().saveLocaleToPrefs(
-                            locale: Locale(
-                              'de',
-                            ),
-                          );
+                        locale: Locale('de'),
+                      );
                     },
                   ),
                 ),
@@ -240,18 +212,13 @@ class LocalesWidget extends StatelessWidget {
                       ),
                       child: Align(
                         alignment: Alignment(0, -0.1),
-                        child: Text(
-                          'Espagnol',
-                          style: TextStyles.h2BlackBold,
-                        ),
+                        child: Text('Espagnol', style: TextStyles.h2BlackBold),
                       ),
                     ),
                     onTap: () {
                       context.read<LocaleCubit>().saveLocaleToPrefs(
-                            locale: Locale(
-                              'es',
-                            ),
-                          );
+                        locale: Locale('es'),
+                      );
                     },
                   ),
                 ),

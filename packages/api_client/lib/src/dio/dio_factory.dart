@@ -1,11 +1,7 @@
-import 'package:apiClient/src/interceptors/content_type_interceptor.dart';
-import 'package:apiClient/src/interceptors/locale_interceptor.dart';
-import 'package:apiClient/src/interceptors/os_type_interceptor.dart';
-import 'package:apiClient/src/locale/locale_provider.dart';
-import 'package:apiClient/src/transformers/response_transformer.dart';
+import 'package:apiClient/main.dart';
 import 'package:dio/dio.dart';
-
-import 'dio_logger.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioFactory {
   static const Duration _defaultMaxAge = Duration(hours: 1);
@@ -20,12 +16,12 @@ class DioFactory {
     'DIO_CACHE_KEY_MAX_STALE': _defaultMaxStale,
   };
 
-  static Dio create(
-    LocaleProvider localeProvider,
-  ) {
+  static Dio create({
+    required FlutterSecureStorage secureStorage,
+  }) {
     final BaseOptions options = BaseOptions(
-      baseUrl:
-          'http://ec2-16-170-122-157.eu-north-1.compute.amazonaws.com/', // wifi ip from command prompt with Git Bash -> ipconfig
+      baseUrl: 'https://e24a4994ed7f.ngrok-free.app/',
+      // wifi ip from command prompt with Git Bash -> ipconfig
       receiveDataWhenStatusError: true,
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
@@ -35,18 +31,15 @@ class DioFactory {
 
     dio.interceptors.addAll(
       <Interceptor>[
-        ContentTypeInterceptor(),
-        LocaleInterceptor(localeProvider),
-        OSTypeInterceptor(),
-        DioLogger(
-          requestBody: true,
+        AuthenticationInterceptor(
+          secureStorage: secureStorage,
+        ),
+        PrettyDioLogger(
           requestHeader: true,
-          compact: false,
+          requestBody: true,
         ),
       ],
     );
-
-    dio.transformer = ResponseTransformer();
 
     return dio;
   }

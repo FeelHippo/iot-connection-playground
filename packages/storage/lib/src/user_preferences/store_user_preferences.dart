@@ -6,11 +6,11 @@ class StoreUserPreferences extends UserPreferences {
   StoreUserPreferences();
 
   /// Session info
-  static const String _key = 'current-user-id';
-  static const String _keyDeviceToken = 'current-device-token';
+  static const String _key = 'current_user_id';
+  static const String _keyDeviceToken = 'current_device_token';
   static const String prefLoginUserData = 'pref_login_user_data';
   static const String prefLocaleUserData = 'pref_locale_user_data';
-  static String prefIsAccountDeleted = 'is_account_deleted';
+  static const String prefIsAccountDeleted = 'is_account_deleted';
 
   @override
   Future<String?> getCurrentUserId() async {
@@ -53,12 +53,6 @@ class StoreUserPreferences extends UserPreferences {
   }
 
   @override
-  Future<String?> getRegisteredDeviceToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyDeviceToken);
-  }
-
-  @override
   Future<void> putUserLocale(String locale) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(prefLocaleUserData, locale);
@@ -68,6 +62,12 @@ class StoreUserPreferences extends UserPreferences {
   Future<String?> getUserLocale() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(prefLocaleUserData);
+  }
+
+  @override
+  Future<String?> getRegisteredDeviceToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyDeviceToken);
   }
 
   @override

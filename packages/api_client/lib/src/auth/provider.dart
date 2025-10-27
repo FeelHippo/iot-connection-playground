@@ -1,17 +1,15 @@
-import 'package:apiClient/src/auth/model.dart';
+import 'package:apiClient/main.dart';
 
-abstract class AuthProvider {
-  /// lib/data/auth/store_auth_provider.dart
-  /// returns the broadcast StreamController
-  /// that caches the latest added value or error
-  Stream<AuthModel> get();
+abstract class AuthenticationProvider {
+  Future<AuthenticationModel> doLogin({
+    required LoginRequest loginRequest,
+  });
 
-  /// lib/data/auth/store_auth_provider.dart
-  /// if the model is empty, remove the token from storage
-  /// otherwise, write the new token to storage
-  Future<void> put(AuthModel model);
+  Future<AuthenticationModel> doRegister({
+    required RegisterRequest registerRequest,
+  });
 
-  /// lib/data/auth/store_auth_provider.dart
-  /// remove authentication from app storage
-  Future<void> remove();
+  Future<BaseAuthModel> getUserById({
+    required String id,
+  });
 }

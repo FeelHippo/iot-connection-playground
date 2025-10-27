@@ -1,70 +1,48 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:giggle/presentation/navigation/app_navigator.dart';
-import 'package:giggle/presentation/navigation/app_routes.dart';
-import 'package:giggle/presentation/splash/bloc/splash_bloc.dart';
 import 'package:giggle/presentation/themes/constants/text_styles.dart';
 
 class IntroWidget extends StatelessWidget {
-  const IntroWidget({
-    super.key,
-    required this.bloc,
-  });
-
-  final SplashBloc bloc;
+  const IntroWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SplashBloc, SplashState>(
-      bloc: bloc,
-      listener: (BuildContext context, SplashState state) async {
-        if (state is SplashToLocalisationState) {
-          AppNavigator.of(context).push(AppRoutes.localesScreen());
-        }
-      },
-      builder: (BuildContext context, SplashState state) {
-        return Column(
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Text(
-                        context.tr('welcome'),
-                        style: TextStyles.h2Black,
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        context.tr('giggle'),
-                        style: TextStyles.titleBlack,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    context.tr('motto'),
+                    context.tr('welcome'),
                     style: TextStyles.h2Black,
                     textAlign: TextAlign.center,
                   ),
+                  Text(context.tr('giggle'), style: TextStyles.titleBlack),
                 ],
               ),
-            ),
-          ],
-        );
-      },
+            ],
+          ),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                context.tr('motto'),
+                style: TextStyles.h2Black,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

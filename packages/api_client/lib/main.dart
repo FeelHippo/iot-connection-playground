@@ -1,28 +1,10 @@
 export 'src/api_client.dart' show ApiClient;
-export 'src/auth/interactor.dart' show AuthInteractor;
-export 'src/auth/model.dart' show AuthModel;
-export 'src/auth/provider.dart' show AuthProvider;
+export 'src/auth/network.dart' show NetworkAuthProvider;
+export 'src/auth/provider.dart' show AuthenticationProvider;
+export 'src/auth/repository.dart' show AuthenticationRepository;
 export 'src/dio/dio_factory.dart' show DioFactory;
-export 'src/dio/dio_logger.dart' show DioLogger;
-export 'src/dto/generic_dto.dart' show GenericDto;
-export 'src/interceptors/content_type_interceptor.dart'
-    show ContentTypeInterceptor;
-export 'src/interceptors/locale_interceptor.dart' show LocaleInterceptor;
-export 'src/interceptors/os_type_interceptor.dart' show OSTypeInterceptor;
-export 'src/locale/locale_provider.dart' show LocaleProvider;
-export 'src/login/interactor.dart' show LoginInteractor;
-export 'src/login/model.dart' show LoginModel;
-export 'src/login/network_interface.dart' show NetworkLoginProvider;
-export 'src/login/provider.dart' show LoginProvider;
-export 'src/requests/generic_request.dart' show GenericRequest;
+export 'src/dio/interceptors/authentication.dart'
+    show AuthenticationInterceptor;
+export 'src/models/authentication.dart' show AuthenticationModel, BaseAuthModel;
 export 'src/requests/login.dart' show LoginRequest;
-export 'src/something/interactor.dart' show SomethingInteractor;
-export 'src/something/mapper.dart' show SomethingMapper;
-export 'src/something/model.dart' show SomethingModel;
-export 'src/something/network_interface.dart' show NetworkInterface;
-export 'src/something/provider.dart' show SomethingProvider;
-export 'src/transformers/response_transformer.dart' show ResponseTransformer;
-export 'src/user/interactor.dart' show UserInteractor;
-export 'src/user/model.dart' show UserModel;
-export 'src/user/network_interface.dart' show NetworkUserStorage;
-export 'src/user/provider.dart' show UserProvider;
+export 'src/requests/register.dart' show RegisterRequest;

@@ -1,31 +1,23 @@
 import 'package:flutter/cupertino.dart';
-import 'package:giggle/injector.dart';
-import 'package:giggle/presentation/navigation/app_navigator.dart';
 import 'package:giggle/presentation/onboarding/intro/intro_widget.dart';
-import 'package:giggle/presentation/splash/bloc/splash_bloc.dart';
-import 'package:giggle/presentation/widgets/app_scaffold.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class IntroScreen extends StatelessWidget {
-  const IntroScreen({super.key, required this.rootNavigatorKey});
+import '../../common/app_scaffold.dart';
+import '../../dependencies/injector.dart';
 
-  final GlobalKey<NavigatorState> rootNavigatorKey;
+class IntroScreen extends StatelessWidget {
+  const IntroScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Future<dynamic>.delayed(
+      Duration(seconds: 1),
+    ).then((_) => context.go('/locales'));
     return AppScaffold(
       body: Consumer<IOC>(
         builder: (BuildContext context, IOC ioc, Widget? child) {
-          final SplashBloc splashBloc = ioc.getDependency<SplashBloc>()
-            // IntroEvent will trigger navigation to the carousel
-            ..add(IntroEvent());
-
-          return Provider<AppNavigator>(
-            create: (BuildContext context) => AppNavigator(rootNavigatorKey),
-            child: IntroWidget(
-              bloc: splashBloc,
-            ),
-          );
+          return IntroWidget();
         },
       ),
     );
