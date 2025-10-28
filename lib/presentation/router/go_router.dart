@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:giggle/presentation/common/app_scaffold.dart';
 import 'package:giggle/presentation/common/circular_progress_bar.dart';
-import 'package:giggle/presentation/onboarding/intro/intro_screen.dart';
-import 'package:giggle/presentation/onboarding/locales/locales_screen.dart';
+import 'package:giggle/presentation/onboarding/intro/screen.dart';
+import 'package:giggle/presentation/onboarding/locales/screen.dart';
 import 'package:go_router/go_router.dart';
 
-import '../home/widget.dart';
-import '../login/widget.dart';
-import '../registration/widget.dart';
+import '../home/screen.dart';
+import '../login/screen.dart';
+import '../registration/screen.dart';
 
 final GoRouter router = GoRouter.routingConfig(
   routingConfig: routingConfig,
@@ -38,13 +38,13 @@ final RoutingConfig unauthorizedRoutingConfig = RoutingConfig(
     GoRoute(
       path: '/register',
       builder: (BuildContext context, GoRouterState state) {
-        return const RegistrationWidget();
+        return const RegistrationScreen();
       },
     ),
     GoRoute(
       path: '/login',
       builder: (BuildContext context, GoRouterState state) {
-        return const LoginWidget();
+        return const LoginScreen();
       },
     ),
   ],
@@ -62,6 +62,6 @@ final RoutingConfig authorizedRoutingConfig = RoutingConfig(
     }
   },
   routes: <RouteBase>[
-    GoRoute(path: '/', builder: (_, __) => const HomeWidget()),
+    GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
   ],
 );

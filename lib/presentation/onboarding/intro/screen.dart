@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:giggle/presentation/onboarding/intro/intro_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:giggle/presentation/onboarding/intro/widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

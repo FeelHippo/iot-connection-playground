@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:giggle/bloc/locales/cubit.dart';
 import 'package:giggle/presentation/themes/constants/text_styles.dart';
@@ -13,7 +13,7 @@ class LocalesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<LocaleCubit, Locale>(
       listener: (BuildContext context, Locale state) {
-        context.go('register');
+        context.go('/register');
       },
       child: Column(
         children: <Widget>[
@@ -145,7 +145,7 @@ class LocalesWidget extends StatelessWidget {
                     width: (MediaQuery.of(context).size.width / 2) - 8,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: ImageAssets.dialogueLeft().image,
+                        image: ImageAssets.dialogueRight().image,
                         invertColors: true,
                       ),
                     ),
@@ -183,7 +183,7 @@ class LocalesWidget extends StatelessWidget {
                       width: (MediaQuery.of(context).size.width / 2) - 8,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: ImageAssets.dialogueLeft().image,
+                          image: ImageAssets.dialogueRight().image,
                         ),
                       ),
                       child: Align(
@@ -212,7 +212,7 @@ class LocalesWidget extends StatelessWidget {
                       ),
                       child: Align(
                         alignment: Alignment(0, -0.1),
-                        child: Text('Espagnol', style: TextStyles.h2BlackBold),
+                        child: Text('Español', style: TextStyles.h2BlackBold),
                       ),
                     ),
                     onTap: () {

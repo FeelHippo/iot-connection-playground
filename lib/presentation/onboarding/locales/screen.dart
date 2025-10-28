@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../common/app_scaffold.dart';
 import '../../dependencies/injector.dart';
-import 'locales_widget.dart';
+import 'widget.dart';
 
 class LocalesScreen extends StatelessWidget {
   const LocalesScreen({super.key});
