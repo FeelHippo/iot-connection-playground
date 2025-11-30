@@ -9,7 +9,7 @@ abstract class AuthenticationProvider {
     required RegisterFinishRequest registerRequest,
   });
 
-  Future<AuthenticationModel> doLoginStart({
+  Future<LoginStartModel> doLoginStart({
     required LoginStartRequest loginRequest,
   });
 

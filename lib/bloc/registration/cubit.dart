@@ -55,6 +55,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
 
     final AuthenticationModel authenticationModel =
         await authenticationRepository.registerFinish(
+          userId: webAuthnChallenge.user.id,
           id: platformRes.id,
           rawId: platformRes.rawId,
           clientDataJSON: platformRes.clientDataJSON,

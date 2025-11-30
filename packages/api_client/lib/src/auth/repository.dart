@@ -1,5 +1,5 @@
 import 'package:apiClient/main.dart';
-import 'package:apiClient/src/requests/register.dart';
+import 'package:apiClient/src/requests/login.dart';
 import 'package:storage/main.dart';
 
 class AuthenticationRepository {
@@ -26,6 +26,7 @@ class AuthenticationRepository {
   }
 
   Future<AuthenticationModel> registerFinish({
+    required String userId,
     required String id,
     required String rawId,
     required String clientDataJSON,
@@ -34,31 +35,54 @@ class AuthenticationRepository {
   }) async {
     return authenticationProvider.doRegisterFinish(
       registerRequest: RegisterFinishRequest(
-        id: id,
-        rawId: rawId,
-        response: AuthenticatorAttestationResponseJSON(
-          clientDataJSON: clientDataJSON,
-          attestationObject: attestationObject,
+        id: userId,
+        data: RegisterFinishDataRequest(
+          id: id,
+          rawId: rawId,
+          response: AuthenticatorAttestationResponseJSON(
+            clientDataJSON: clientDataJSON,
+            attestationObject: attestationObject,
+          ),
+          clientExtensionResults: new AuthenticationExtensionsClientOutputs(),
+          type: 'public-key',
         ),
-        clientExtensionResults: AuthenticationExtensionsClientOutputs(),
-        type: 'public-key',
       ),
     );
   }
 
-  Future<AuthenticationModel> doLogin({
+  Future<LoginStartModel> doLoginStart({
     required String email,
-    required String password,
   }) async {
-    return authenticationProvider.doLogin(
-      loginRequest: LoginRequest(
+    return authenticationProvider.doLoginStart(
+      loginRequest: LoginStartRequest(
         email: email,
-        password: password,
       ),
     );
   }
 
-  Future<BaseAuthModel> getUserById({required String id}) async {
-    return authenticationProvider.getUserById(id: id);
+  Future<AuthenticationModel> doLoginFinish({
+    required String email,
+    required String id,
+    required String rawId,
+    required String clientDataJSON,
+    required String authenticatorData,
+    required String signature,
+  }) async {
+    return authenticationProvider.doLoginFinish(
+      loginRequest: LoginFinishRequest(
+        name: email,
+        data: LoginFinishDataRequest(
+          id: id,
+          rawId: rawId,
+          response: AuthenticatorAssertionResponseJSON(
+            clientDataJSON: clientDataJSON,
+            authenticatorData: authenticatorData,
+            signature: signature,
+          ),
+          clientExtensionResults: new AuthenticationExtensionsClientOutputs(),
+          type: 'public-key',
+        ),
+      ),
+    );
   }
 }

@@ -22,6 +22,22 @@ class RegisterStartRequest {
 class RegisterFinishRequest {
   RegisterFinishRequest({
     required this.id,
+    required this.data,
+  });
+
+  final String id;
+  final RegisterFinishDataRequest data;
+
+  factory RegisterFinishRequest.fromJson(Map<String, dynamic> json) =>
+      _$RegisterFinishRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RegisterFinishRequestToJson(this);
+}
+
+@JsonSerializable()
+class RegisterFinishDataRequest {
+  RegisterFinishDataRequest({
+    required this.id,
     required this.rawId,
     required this.response,
     required this.clientExtensionResults,
@@ -34,10 +50,10 @@ class RegisterFinishRequest {
   final AuthenticationExtensionsClientOutputs clientExtensionResults;
   final String type;
 
-  factory RegisterFinishRequest.fromJson(Map<String, dynamic> json) =>
-      _$RegisterFinishRequestFromJson(json);
+  factory RegisterFinishDataRequest.fromJson(Map<String, dynamic> json) =>
+      _$RegisterFinishDataRequestFromJson(json);
 
-  Map<String, dynamic> toJson() => _$RegisterFinishRequestToJson(this);
+  Map<String, dynamic> toJson() => _$RegisterFinishDataRequestToJson(this);
 }
 
 @JsonSerializable()

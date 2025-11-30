@@ -30,7 +30,7 @@ abstract class ApiClient {
   })
   @POST('login/start')
   Future<LoginStartDto> loginStart(
-    @Body() LoginRequest request,
+    @Body() LoginStartRequest request,
   );
 
   @Extra(<String, Object>{
@@ -38,6 +38,6 @@ abstract class ApiClient {
   })
   @POST('login/finish')
   Future<AuthenticationDto> loginFinish(
-    @Body() LoginRequest request,
+    @Body() LoginFinishRequest request,
   );
 }

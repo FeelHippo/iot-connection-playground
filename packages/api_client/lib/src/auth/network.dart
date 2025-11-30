@@ -43,32 +43,21 @@ class NetworkAuthProvider extends AuthenticationProvider {
   }
 
   @override
-  Future<AuthenticationModel> doLoginStart({
+  Future<LoginStartModel> doLoginStart({
     required LoginStartRequest loginRequest,
   }) async {
-    final AuthenticationDto dto = await apiClient.login(loginRequest);
-    return AuthenticationModel(
-      token: dto.token,
-      id: dto.id,
-      email: dto.email,
-      username: dto.username,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-    );
+    final LoginStartDto dto = await apiClient.loginStart(loginRequest);
+    return LoginStartModel(challenge: dto.challenge, rpId: dto.rpId);
   }
 
   @override
   Future<AuthenticationModel> doLoginFinish({
     required LoginFinishRequest loginRequest,
   }) async {
-    final AuthenticationDto dto = await apiClient.login(loginRequest);
+    final AuthenticationDto dto = await apiClient.loginFinish(loginRequest);
     return AuthenticationModel(
-      token: dto.token,
-      id: dto.id,
-      email: dto.email,
-      username: dto.username,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
+      accessToken: dto.accessToken,
+      refreshToken: dto.refreshToken,
     );
   }
 }
