@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// App Dashboard Controller
 class DashboardController {
-  /// Tell the framework to not send the first frames to the engine until there
+  /// Tell the framework not to send the first frames to the engine until there
   /// is a corresponding call to allowFirstFrame
   static void preserve() =>
       WidgetsFlutterBinding.ensureInitialized()..deferFirstFrame();

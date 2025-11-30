@@ -1,6 +1,8 @@
 import 'package:apiClient/main.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:passkeys/authenticator.dart';
+import 'package:passkeys/types.dart';
 
 class RegistrationState extends Equatable {
   const RegistrationState({
@@ -8,50 +10,60 @@ class RegistrationState extends Equatable {
     this.isLoggedIn = false,
   });
 
-  RegistrationState.isAuthenticated(
-    this.authenticationModel,
-  ) : isLoggedIn = true;
+  RegistrationState.isAuthenticated(this.authenticationModel)
+    : isLoggedIn = true;
 
   final AuthenticationModel? authenticationModel;
   final bool isLoggedIn;
 
   @override
-  List<Object?> get props => <Object?>[
-    authenticationModel,
-    isLoggedIn,
-  ];
+  List<Object?> get props => <Object?>[authenticationModel, isLoggedIn];
 }
 
 class RegistrationCubit extends Cubit<RegistrationState> {
   RegistrationCubit(this.authenticationRepository)
-    : super(
-        RegistrationState(
-          authenticationModel: null,
-        ),
-      );
+    : super(RegistrationState(authenticationModel: null));
 
   final AuthenticationRepository authenticationRepository;
 
-  void register({
-    required String email,
-    required String password,
-    required String username,
-    required String firstName,
-    required String lastName,
-  }) async {
-    final AuthenticationModel authenticationModel =
-        await authenticationRepository.doRegister(
+  void register({required String email, required String username}) async {
+    final PasskeyAuthenticator passkeyAuthenticator = PasskeyAuthenticator();
+    final RegistrationStartModel webAuthnChallenge =
+        await authenticationRepository.registerStart(
           email: email,
-          password: password,
           username: username,
-          firstName: firstName,
-          lastName: lastName,
         );
 
-    if (authenticationModel.token.isNotEmpty) {
-      emit(
-        RegistrationState.isAuthenticated(authenticationModel),
-      );
+    final RegisterRequestType challenge = RegisterRequestType(
+      // String
+      challenge: webAuthnChallenge.challenge,
+      relyingParty: RelyingPartyType(
+        name: webAuthnChallenge.rp.name,
+        id: webAuthnChallenge.rp.id,
+      ),
+      user: UserType(
+        displayName: webAuthnChallenge.user.displayName,
+        name: webAuthnChallenge.user.name,
+        id: webAuthnChallenge.user.id,
+      ),
+      excludeCredentials:
+          webAuthnChallenge.excludeCredentials as List<CredentialType>,
+    );
+
+    final RegisterResponseType platformRes = await passkeyAuthenticator
+        .register(challenge);
+
+    final AuthenticationModel authenticationModel =
+        await authenticationRepository.registerFinish(
+          id: platformRes.id,
+          rawId: platformRes.rawId,
+          clientDataJSON: platformRes.clientDataJSON,
+          attestationObject: platformRes.attestationObject,
+          transports: platformRes.transports,
+        );
+
+    if (authenticationModel.accessToken.isNotEmpty) {
+      emit(RegistrationState.isAuthenticated(authenticationModel));
     }
   }
 }

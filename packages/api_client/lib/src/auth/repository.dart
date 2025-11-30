@@ -1,4 +1,5 @@
 import 'package:apiClient/main.dart';
+import 'package:apiClient/src/requests/register.dart';
 import 'package:storage/main.dart';
 
 class AuthenticationRepository {
@@ -12,6 +13,39 @@ class AuthenticationRepository {
   final AuthProvider authProvider;
   final UserPreferences userPreferences;
 
+  Future<RegistrationStartModel> registerStart({
+    required String email,
+    required String username,
+  }) async {
+    return authenticationProvider.doRegisterStart(
+      registerRequest: RegisterStartRequest(
+        email: email,
+        username: username,
+      ),
+    );
+  }
+
+  Future<AuthenticationModel> registerFinish({
+    required String id,
+    required String rawId,
+    required String clientDataJSON,
+    required String attestationObject,
+    required List<String?> transports,
+  }) async {
+    return authenticationProvider.doRegisterFinish(
+      registerRequest: RegisterFinishRequest(
+        id: id,
+        rawId: rawId,
+        response: AuthenticatorAttestationResponseJSON(
+          clientDataJSON: clientDataJSON,
+          attestationObject: attestationObject,
+        ),
+        clientExtensionResults: AuthenticationExtensionsClientOutputs(),
+        type: 'public-key',
+      ),
+    );
+  }
+
   Future<AuthenticationModel> doLogin({
     required String email,
     required String password,
@@ -20,24 +54,6 @@ class AuthenticationRepository {
       loginRequest: LoginRequest(
         email: email,
         password: password,
-      ),
-    );
-  }
-
-  Future<AuthenticationModel> doRegister({
-    required String email,
-    required String password,
-    required String username,
-    required String firstName,
-    required String lastName,
-  }) async {
-    return authenticationProvider.doRegister(
-      registerRequest: RegisterRequest(
-        email: email,
-        password: password,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
       ),
     );
   }

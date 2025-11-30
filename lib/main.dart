@@ -15,11 +15,9 @@ import 'bloc/simple_bloc_observer.dart';
 
 Future<void> main() async {
   await runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+    DashboardController.preserve();
 
     await setUp();
-
-    DashboardController.preserve();
 
     final IOC ioc = IOC.appScope();
 

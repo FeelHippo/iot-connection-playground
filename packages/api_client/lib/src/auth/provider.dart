@@ -1,15 +1,19 @@
 import 'package:apiClient/main.dart';
 
 abstract class AuthenticationProvider {
-  Future<AuthenticationModel> doLogin({
-    required LoginRequest loginRequest,
+  Future<RegistrationStartModel> doRegisterStart({
+    required RegisterStartRequest registerRequest,
   });
 
-  Future<AuthenticationModel> doRegister({
-    required RegisterRequest registerRequest,
+  Future<AuthenticationModel> doRegisterFinish({
+    required RegisterFinishRequest registerRequest,
   });
 
-  Future<BaseAuthModel> getUserById({
-    required String id,
+  Future<AuthenticationModel> doLoginStart({
+    required LoginStartRequest loginRequest,
+  });
+
+  Future<AuthenticationModel> doLoginFinish({
+    required LoginFinishRequest loginRequest,
   });
 }

@@ -16,23 +16,14 @@ class RegistrationWidget extends StatefulWidget {
 
 class _RegistrationWidgetState extends State<RegistrationWidget> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
     _usernameController.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
     super.dispose();
   }
 
@@ -94,68 +85,6 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text('Password', style: TextStyle(fontSize: 14)),
-                          CustomTextFormField(
-                            controller: _passwordController,
-                            validator: (String? value) {
-                              if (value != null && value.isNotEmpty) {
-                                // TODO: add regex check
-                                return null;
-                              }
-                              return 'Enter valid password';
-                            },
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                          ),
-                          Text(
-                            'Forgot Password ?',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Confirm Password',
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          CustomTextFormField(
-                            controller: _confirmPasswordController,
-                            validator: (String? value) {
-                              if (value != null && value.isNotEmpty) {
-                                // TODO: add regex check
-                                return null;
-                              }
-                              return 'Enter valid password';
-                            },
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                          ),
-                          Text(
-                            'Forgot Password ?',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
                           Text('Username', style: TextStyle(fontSize: 14)),
                           CustomTextFormField(
                             controller: _usernameController,
@@ -173,54 +102,6 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                   ],
                 ),
                 SizedBox(height: 8),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('First Name', style: TextStyle(fontSize: 14)),
-                          CustomTextFormField(
-                            controller: _firstNameController,
-                            validator: (String? value) {
-                              if (value != null && value.isNotEmpty) {
-                                return null;
-                              }
-                              return 'Enter valid email';
-                            },
-                            keyboardType: TextInputType.text,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Last Name', style: TextStyle(fontSize: 14)),
-                          CustomTextFormField(
-                            controller: _lastNameController,
-                            validator: (String? value) {
-                              if (value != null && value.isNotEmpty) {
-                                return null;
-                              }
-                              return 'Enter valid email';
-                            },
-                            keyboardType: TextInputType.text,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
                 Row(
                   children: <Widget>[
                     Expanded(
@@ -248,7 +129,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           SizedBox(height: 8),
                           GestureDetector(
                             onTap: () {
-                              context.pop();
+                              context.go('/login');
                             },
                             child: Text(
                               'I Do Have an Account',
@@ -272,10 +153,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
     if (_formKey.currentState!.validate()) {
       context.read<RegistrationCubit>().register(
         email: _emailController.text,
-        password: _passwordController.text,
         username: _usernameController.text,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
       );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

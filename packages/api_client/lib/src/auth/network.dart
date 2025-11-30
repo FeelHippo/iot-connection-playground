@@ -1,6 +1,4 @@
 import 'package:apiClient/main.dart';
-import 'package:apiClient/src/dto/authentication.dart';
-import 'package:apiClient/src/dto/user.dart';
 
 class NetworkAuthProvider extends AuthenticationProvider {
   NetworkAuthProvider({
@@ -10,8 +8,43 @@ class NetworkAuthProvider extends AuthenticationProvider {
   final ApiClient apiClient;
 
   @override
-  Future<AuthenticationModel> doLogin({
-    required LoginRequest loginRequest,
+  Future<RegistrationStartModel> doRegisterStart({
+    required RegisterStartRequest registerRequest,
+  }) async {
+    final RegistrationStartDto dto = await apiClient.registerStart(
+      registerRequest,
+    );
+    return RegistrationStartModel(
+      challenge: dto.challenge,
+      rp: RelyingPartyModel(
+        id: dto.rp.id,
+        name: dto.rp.name,
+      ),
+      user: UserModel(
+        id: dto.user.id,
+        name: dto.user.name,
+        displayName: dto.user.displayName,
+      ),
+      excludeCredentials: dto.excludeCredentials,
+    );
+  }
+
+  @override
+  Future<AuthenticationModel> doRegisterFinish({
+    required RegisterFinishRequest registerRequest,
+  }) async {
+    final AuthenticationDto dto = await apiClient.registerFinish(
+      registerRequest,
+    );
+    return AuthenticationModel(
+      accessToken: dto.accessToken,
+      refreshToken: dto.refreshToken,
+    );
+  }
+
+  @override
+  Future<AuthenticationModel> doLoginStart({
+    required LoginStartRequest loginRequest,
   }) async {
     final AuthenticationDto dto = await apiClient.login(loginRequest);
     return AuthenticationModel(
@@ -25,12 +58,10 @@ class NetworkAuthProvider extends AuthenticationProvider {
   }
 
   @override
-  Future<AuthenticationModel> doRegister({
-    required RegisterRequest registerRequest,
+  Future<AuthenticationModel> doLoginFinish({
+    required LoginFinishRequest loginRequest,
   }) async {
-    final AuthenticationDto dto = await apiClient.register(
-      registerRequest,
-    );
+    final AuthenticationDto dto = await apiClient.login(loginRequest);
     return AuthenticationModel(
       token: dto.token,
       id: dto.id,
@@ -38,19 +69,6 @@ class NetworkAuthProvider extends AuthenticationProvider {
       username: dto.username,
       firstName: dto.firstName,
       lastName: dto.lastName,
-    );
-  }
-
-  @override
-  Future<BaseAuthModel> getUserById({required String id}) async {
-    final UserDto dto = await apiClient.getUserById(id);
-    final UserDataDto userData = dto.user;
-    return BaseAuthModel(
-      id: userData.id,
-      email: userData.email,
-      username: userData.username,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
     );
   }
 }

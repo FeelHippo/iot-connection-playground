@@ -1,6 +1,4 @@
 import 'package:apiClient/main.dart';
-import 'package:apiClient/src/dto/authentication.dart';
-import 'package:apiClient/src/dto/user.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -14,21 +12,32 @@ abstract class ApiClient {
   @Extra(<String, Object>{
     AuthenticationInterceptor.nonAuth: true,
   })
-  @POST('login/')
-  Future<AuthenticationDto> login(
+  @POST('register/start')
+  Future<RegistrationStartDto> registerStart(
+    @Body() RegisterStartRequest request,
+  );
+
+  @Extra(<String, Object>{
+    AuthenticationInterceptor.nonAuth: true,
+  })
+  @POST('register/finish')
+  Future<AuthenticationDto> registerFinish(
+    @Body() RegisterFinishRequest request,
+  );
+
+  @Extra(<String, Object>{
+    AuthenticationInterceptor.nonAuth: true,
+  })
+  @POST('login/start')
+  Future<LoginStartDto> loginStart(
     @Body() LoginRequest request,
   );
 
   @Extra(<String, Object>{
     AuthenticationInterceptor.nonAuth: true,
   })
-  @POST('register/')
-  Future<AuthenticationDto> register(
-    @Body() RegisterRequest request,
-  );
-
-  @GET('users/')
-  Future<UserDto> getUserById(
-    @Query('id') String id,
+  @POST('login/finish')
+  Future<AuthenticationDto> loginFinish(
+    @Body() LoginRequest request,
   );
 }
