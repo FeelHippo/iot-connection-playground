@@ -35,6 +35,8 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
           BlocProvider.of<AuthBloc>(context).add(
             CompleteAuthorization(
               authenticationModel: state.authenticationModel!,
+              email: state.email!,
+              username: state.username,
             ),
           );
         }

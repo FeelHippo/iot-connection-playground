@@ -1,22 +1,13 @@
 part of 'auth_bloc.dart';
 
 class AuthState extends Equatable {
-  const AuthState({
-    this.error,
-    this.auth = const InitialAuthUiModel(),
-  });
+  const AuthState({this.error, this.auth = const InitialAuthUiModel()});
 
   final dynamic error;
   final AuthUiModel auth;
 
-  AuthState copyWith({
-    dynamic error,
-    AuthUiModel? auth,
-  }) {
-    return AuthState(
-      error: error ?? this.error,
-      auth: auth ?? this.auth,
-    );
+  AuthState copyWith({dynamic error, AuthUiModel? auth}) {
+    return AuthState(error: error ?? this.error, auth: auth ?? this.auth);
   }
 
   @override
@@ -49,10 +40,10 @@ class UnauthorizedAuthUiModel extends AuthUiModel {
 }
 
 class AuthorizedAuthUiModel extends AuthUiModel {
-  const AuthorizedAuthUiModel(this.user);
+  const AuthorizedAuthUiModel(this.userData);
 
-  final UserModel user;
+  final UserDataModel userData;
 
   @override
-  List<Object?> get props => <Object?>[user];
+  List<Object> get props => <Object>[userData];
 }

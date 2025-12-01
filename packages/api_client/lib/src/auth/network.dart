@@ -60,4 +60,15 @@ class NetworkAuthProvider extends AuthenticationProvider {
       refreshToken: dto.refreshToken,
     );
   }
+
+  @override
+  Future<UserDataModel> getUserData() async {
+    final UserDto userDto = await apiClient.getUserData();
+    final UserDataDto userDataDto = userDto.user;
+    return UserDataModel(
+      username: userDataDto.username,
+      telephone: userDataDto.telephone,
+      picture: userDataDto.picture,
+    );
+  }
 }

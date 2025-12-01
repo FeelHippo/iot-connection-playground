@@ -14,22 +14,15 @@ class AuthRepository {
     yield* authProvider.get();
   }
 
-  Future<UserModel?> authorize({
+  Future<void> authorize({
     required AuthenticationModel authenticationModel,
   }) async {
     // store auth token on device
     await authProvider.put(
       AuthModel(
-        token: authenticationModel.token,
-        userUid: authenticationModel.id,
+        accessToken: authenticationModel.accessToken,
+        refreshToken: authenticationModel.refreshToken,
       ),
-    );
-    return UserModel(
-      id: authenticationModel.id,
-      email: authenticationModel.email,
-      username: authenticationModel.username,
-      firstName: authenticationModel.firstName,
-      lastName: authenticationModel.lastName,
     );
   }
 }

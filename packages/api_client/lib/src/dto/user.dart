@@ -19,18 +19,16 @@ class UserDto {
 @JsonSerializable()
 class UserDataDto {
   UserDataDto({
-    required this.id,
     required this.email,
     required this.username,
-    required this.firstName,
-    required this.lastName,
+    this.telephone,
+    this.picture,
   });
 
-  final String id;
   final String email;
   final String username;
-  final String firstName;
-  final String lastName;
+  final String? telephone;
+  final Uri? picture;
 
   factory UserDataDto.fromJson(Map<String, dynamic> json) =>
       _$UserDataDtoFromJson(json);

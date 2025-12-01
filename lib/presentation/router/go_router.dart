@@ -50,18 +50,21 @@ final RoutingConfig unauthorizedRoutingConfig = RoutingConfig(
   ],
 );
 
-final RoutingConfig authorizedRoutingConfig = RoutingConfig(
-  redirect: (BuildContext context, GoRouterState state) {
-    // this is a workaround. When coming from unauthorizedRoutingConfig.register
-    // the context is not updated, and keeps '/register' as the current route
-    // which is not a valid authorizedRoutingConfig route, causing an error
-    if (state.matchedLocation.contains('register')) {
-      return '/';
-    } else {
-      return null;
-    }
-  },
-  routes: <RouteBase>[
-    GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
-  ],
-);
+RoutingConfig authorizedRoutingConfig(bool needsMoreData) {
+  return RoutingConfig(
+    redirect: (BuildContext context, GoRouterState state) {
+      if (needsMoreData) {
+        return '/profile';
+      } else {
+        return '/';
+      }
+    },
+    routes: <RouteBase>[
+      GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
+      GoRoute(
+        path: '/profile',
+        builder: (_, __) => Container(child: Text('User Profile Here')),
+      ),
+    ],
+  );
+}

@@ -23,7 +23,9 @@ class AuthWidget extends StatelessWidget {
           routingConfig.value = unauthorizedRoutingConfig;
         }
         if (authStatus is AuthorizedAuthUiModel) {
-          routingConfig.value = authorizedRoutingConfig;
+          routingConfig.value = authorizedRoutingConfig(
+            authStatus.userData.needsMoreData,
+          );
         }
 
         return BlocBuilder<LocaleCubit, Locale>(

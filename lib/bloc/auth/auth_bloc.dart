@@ -9,14 +9,8 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(
-    this._authRepository,
-    this._authenticationRepository,
-  ) : super(
-        const AuthState(
-          auth: InitialAuthUiModel(),
-        ),
-      ) {
+  AuthBloc(this._authRepository, this._authenticationRepository)
+    : super(const AuthState(auth: InitialAuthUiModel())) {
     on<FetchAuthEvent>(_handleFetchAuth);
     on<SyncUserStateAuthEvent>(_handleSyncUserStateAuth);
     on<CompleteAuthorization>(_handleCompleteAuthorization);
@@ -36,9 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     _subscription ??= _authRepository.get().listen((AuthModel auth) {
-      add(
-        SyncUserStateAuthEvent(auth: auth),
-      );
+      add(SyncUserStateAuthEvent(auth: auth));
     });
   }
 
@@ -50,23 +42,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await emitStateUnauthorized(emit);
     } else {
       try {
-        final BaseAuthModel userData = await _authenticationRepository
-            .getUserById(
-              id: event.auth.userUid!,
-            );
-        emit(
-          state.copyWith(
-            auth: AuthorizedAuthUiModel(
-              UserModel(
-                id: userData.id,
-                email: userData.email,
-                username: userData.username,
-                firstName: userData.firstName,
-                lastName: userData.lastName,
-              ),
-            ),
-          ),
-        );
+        /// Fetch user data
+        final UserDataModel userModel = await _authenticationRepository
+            .getUserData();
+        emit(state.copyWith(auth: AuthorizedAuthUiModel(userModel)));
       } catch (e, stacktrace) {
         print('Error occurred while trying to authorize $e $stacktrace');
         emit(state.copyWith(error: e));
@@ -81,6 +60,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(
       await _processAuthorisation(
         authenticationModel: event.authenticationModel,
+        email: event.email,
+        username: event.username,
       ),
     );
   }
@@ -94,30 +75,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<AuthState> _processAuthorisation({
     required AuthenticationModel authenticationModel,
+    required String email,
+    required String? username,
   }) async {
-    final UserModel? user = await _authRepository.authorize(
-      authenticationModel: authenticationModel,
-    );
-    if (user != null) {
+    try {
+      /// Store access and refresh token on device
+      await _authRepository.authorize(authenticationModel: authenticationModel);
+
+      /// Fetch user data
+      final UserDataModel userModel = await _authenticationRepository
+          .getUserData();
+
       /// User exists and is authenticated
-      return state.copyWith(
-        auth: AuthorizedAuthUiModel(
-          user,
-        ),
-      );
-    } else {
-      return state.copyWith(
-        auth: UnauthorizedAuthUiModel(),
-      );
+      return state.copyWith(auth: AuthorizedAuthUiModel(userModel));
+    } catch (_) {
+      return state.copyWith(auth: UnauthorizedAuthUiModel());
     }
   }
 
   Future<void> emitStateUnauthorized(Emitter<AuthState> emit) async {
-    emit(
-      state.copyWith(
-        auth: UnauthorizedAuthUiModel(),
-      ),
-    );
+    emit(state.copyWith(auth: UnauthorizedAuthUiModel()));
   }
 
   @override

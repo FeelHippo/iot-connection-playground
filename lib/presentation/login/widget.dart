@@ -16,14 +16,12 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -35,6 +33,7 @@ class _LoginWidgetState extends State<LoginWidget> {
           BlocProvider.of<AuthBloc>(context).add(
             CompleteAuthorization(
               authenticationModel: state.authenticationModel!,
+              email: state.email!,
             ),
           );
         }
@@ -71,36 +70,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                               return 'Enter valid email';
                             },
                             keyboardType: TextInputType.emailAddress,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Password', style: TextStyle(fontSize: 14)),
-                          CustomTextFormField(
-                            controller: _passwordController,
-                            validator: (String? value) {
-                              if (value != null && value.isNotEmpty) {
-                                // TODO: add regex check
-                                return null;
-                              }
-                              return 'Enter valid password';
-                            },
-                            keyboardType: TextInputType.text,
-                            obscureText: true,
-                          ),
-                          Text(
-                            'Forgot Password ?',
-                            style: TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
@@ -157,10 +126,7 @@ class _LoginWidgetState extends State<LoginWidget> {
 
   void _validateLogin() {
     if (_formKey.currentState!.validate()) {
-      context.read<LoginCubit>().authenticate(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
+      context.read<LoginCubit>().login(email: _emailController.text);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Processing Data', textAlign: TextAlign.center),

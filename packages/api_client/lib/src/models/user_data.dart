@@ -1,21 +1,21 @@
 import 'package:equatable/equatable.dart';
 
-class UserModel extends Equatable {
-  const UserModel({
-    required this.email,
+class UserDataModel extends Equatable {
+  UserDataModel({
     required this.username,
     required this.telephone,
     this.picture,
   });
 
-  final String email;
   final String username;
   final String? telephone;
   final Uri? picture;
 
+  bool get needsMoreData =>
+      telephone == null || telephone!.isEmpty || picture == null;
+
   @override
   List<Object?> get props => <Object?>[
-    email,
     username,
     telephone,
     picture,

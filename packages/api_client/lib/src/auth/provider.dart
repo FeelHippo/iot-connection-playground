@@ -16,4 +16,6 @@ abstract class AuthenticationProvider {
   Future<AuthenticationModel> doLoginFinish({
     required LoginFinishRequest loginRequest,
   });
+
+  Future<UserDataModel> getUserData();
 }

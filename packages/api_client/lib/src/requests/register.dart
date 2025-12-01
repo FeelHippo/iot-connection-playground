@@ -84,10 +84,23 @@ class AuthenticationExtensionsClientOutputs {
   final bool? appid;
   final CredentialPropertiesOutput? credProps;
   final bool? hmacCreateSecret;
+
+  factory AuthenticationExtensionsClientOutputs.fromJson(
+    Map<String, dynamic> json,
+  ) => _$AuthenticationExtensionsClientOutputsFromJson(json);
+
+  Map<String, dynamic> toJson() =>
+      _$AuthenticationExtensionsClientOutputsToJson(this);
 }
 
 @JsonSerializable()
 class CredentialPropertiesOutput {
   CredentialPropertiesOutput({this.rk});
   final bool? rk;
+
+  factory CredentialPropertiesOutput.fromJson(
+    Map<String, dynamic> json,
+  ) => _$CredentialPropertiesOutputFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CredentialPropertiesOutputToJson(this);
 }

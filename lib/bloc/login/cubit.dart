@@ -7,12 +7,15 @@ import 'package:passkeys/types.dart';
 class LoginState extends Equatable {
   const LoginState({
     required this.authenticationModel,
+    required this.email,
     this.isLoggedIn = false,
   });
 
-  LoginState.isAuthenticated(this.authenticationModel) : isLoggedIn = true;
+  LoginState.isAuthenticated(this.authenticationModel, this.email)
+    : isLoggedIn = true;
 
   final AuthenticationModel? authenticationModel;
+  final String? email;
   final bool isLoggedIn;
 
   @override
@@ -21,7 +24,7 @@ class LoginState extends Equatable {
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this.authenticationRepository)
-    : super(LoginState(authenticationModel: null));
+    : super(LoginState(authenticationModel: null, email: null));
 
   final AuthenticationRepository authenticationRepository;
 
@@ -51,7 +54,7 @@ class LoginCubit extends Cubit<LoginState> {
         );
 
     if (authenticationModel.accessToken.isNotEmpty) {
-      emit(LoginState.isAuthenticated(authenticationModel));
+      emit(LoginState.isAuthenticated(authenticationModel, email));
     }
   }
 }

@@ -23,3 +23,4 @@ export 'src/requests/register.dart'
         CredentialPropertiesOutput,
         AuthenticatorAttestationResponseJSON,
         AuthenticationExtensionsClientOutputs;
+export 'src/models/user_data.dart' show UserDataModel;

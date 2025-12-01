@@ -10,33 +10,20 @@ class StoreAuthProvider extends AuthProvider {
     _subject = BehaviorSubject<AuthModel>(
       sync: true,
       onListen: () async {
-        final String? token = await _storage.read(key: _tokenKey);
-        final String? userUid = await _storage.read(key: _userUidKey);
-        doTokenWork(token: token, userUid: userUid);
+        final String? accessToken = await _storage.read(key: _accessTokenKey);
+        final String? refreshToken = await _storage.read(key: _refreshTokenKey);
+        put(
+          AuthModel(accessToken: accessToken, refreshToken: refreshToken),
+          write: false,
+        );
       },
     );
   }
 
-  static const String _tokenKey = 'token';
-  static const String _userUidKey = 'user_uid';
+  static const String _accessTokenKey = 'access_token';
+  static const String _refreshTokenKey = 'refresh_token';
   final FlutterSecureStorage _storage;
   Subject<AuthModel>? _subject;
-
-  void doTokenWork({
-    required String? token,
-    required String? userUid,
-  }) {
-    AuthModel model;
-    if (token == null || token.isEmpty) {
-      model = AuthModel.empty();
-    } else {
-      model = AuthModel(
-        token: token,
-        userUid: userUid,
-      );
-    }
-    _subject!.add(model);
-  }
 
   @override
   Stream<AuthModel> get() {
@@ -45,16 +32,20 @@ class StoreAuthProvider extends AuthProvider {
   }
 
   @override
-  Future<void> put(AuthModel model) async {
+  Future<void> put(AuthModel model, {bool write = true}) async {
     if (model.isEmpty) {
-      await _storage.delete(key: _tokenKey);
+      if (write) {
+        await _storage.delete(key: _accessTokenKey);
+        await _storage.delete(key: _refreshTokenKey);
+      }
       _subject!.add(AuthModel.empty());
     } else {
-      await _storage.write(key: _tokenKey, value: model.token);
-      await _storage.write(key: _userUidKey, value: model.userUid);
+      if (write) {
+        await _storage.write(key: _accessTokenKey, value: model.accessToken);
+        await _storage.write(key: _refreshTokenKey, value: model.refreshToken);
+      }
       _subject!.add(model);
     }
-    return;
   }
 
   @override

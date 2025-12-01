@@ -2,20 +2,16 @@ import 'package:equatable/equatable.dart';
 
 class AuthModel extends Equatable {
   AuthModel({
-    required this.token,
-    required this.userUid,
+    required this.accessToken,
+    required this.refreshToken,
   });
+  final String? accessToken;
+  final String? refreshToken;
 
-  AuthModel.empty() : token = null, userUid = null;
+  bool get isEmpty => accessToken == null && refreshToken == null;
 
-  bool get isEmpty => token == null && userUid == null;
-
-  final String? token;
-  final String? userUid;
+  AuthModel.empty() : accessToken = null, refreshToken = null;
 
   @override
-  List<Object?> get props => <Object?>[
-    token,
-    userUid,
-  ];
+  List<Object?> get props => <Object?>[accessToken, refreshToken];
 }

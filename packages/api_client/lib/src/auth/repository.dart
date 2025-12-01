@@ -85,4 +85,8 @@ class AuthenticationRepository {
       ),
     );
   }
+
+  Future<UserDataModel> getUserData() async {
+    return authenticationProvider.getUserData();
+  }
 }

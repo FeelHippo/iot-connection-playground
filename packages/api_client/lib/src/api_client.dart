@@ -40,4 +40,6 @@ abstract class ApiClient {
   Future<AuthenticationDto> loginFinish(
     @Body() LoginFinishRequest request,
   );
+  @GET('user/data')
+  Future<UserDto> getUserData();
 }
