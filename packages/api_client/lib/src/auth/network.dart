@@ -37,6 +37,7 @@ class NetworkAuthProvider extends AuthenticationProvider {
       registerRequest,
     );
     return AuthenticationModel(
+      name: dto.name,
       accessToken: dto.accessToken,
       refreshToken: dto.refreshToken,
     );
@@ -56,6 +57,7 @@ class NetworkAuthProvider extends AuthenticationProvider {
   }) async {
     final AuthenticationDto dto = await apiClient.loginFinish(loginRequest);
     return AuthenticationModel(
+      name: dto.name,
       accessToken: dto.accessToken,
       refreshToken: dto.refreshToken,
     );

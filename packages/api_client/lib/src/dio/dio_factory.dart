@@ -18,6 +18,13 @@ class DioFactory {
 
   static Dio create({
     required FlutterSecureStorage secureStorage,
+    required Future<Map<String?, String?>> Function() getStoredValues,
+    required Future<void> Function({
+      String? name,
+      String? accessToken,
+      String? refreshToken,
+    })
+    updateValues,
   }) {
     final BaseOptions options = BaseOptions(
       baseUrl: 'https://e24a4994ed7f.ngrok-free.app/',
@@ -32,7 +39,10 @@ class DioFactory {
     dio.interceptors.addAll(
       <Interceptor>[
         AuthenticationInterceptor(
+          dio: dio,
           secureStorage: secureStorage,
+          getStoredValues: getStoredValues,
+          updateValues: updateValues,
         ),
         PrettyDioLogger(
           requestHeader: true,

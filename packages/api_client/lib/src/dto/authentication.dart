@@ -5,10 +5,12 @@ part 'authentication.g.dart';
 @JsonSerializable()
 class AuthenticationDto {
   AuthenticationDto({
+    required this.name,
     required this.accessToken,
     required this.refreshToken,
   });
 
+  final String name;
   final String accessToken;
   final String refreshToken;
 
