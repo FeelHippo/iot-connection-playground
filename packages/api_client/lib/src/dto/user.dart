@@ -19,14 +19,16 @@ class UserDto {
 @JsonSerializable()
 class UserDataDto {
   UserDataDto({
-    required this.email,
-    required this.username,
+    required this.id,
+    required this.name,
+    required this.displayName,
     this.telephone,
     this.picture,
   });
 
-  final String email;
-  final String username;
+  final String id;
+  final String name;
+  final String displayName;
   final String? telephone;
   final Uri? picture;
 

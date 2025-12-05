@@ -42,4 +42,10 @@ abstract class ApiClient {
   );
   @GET('user/data')
   Future<UserDto> getUserData();
+  @PATCH('user/data')
+  Future<UserDto> modifyUserData(
+    // TODO: to make sure the keys are all valid, use asnameMap() in the apiClient
+    // https://api.flutter.dev/flutter/dart-core/EnumByName/asNameMap.html
+    @Body() List<Map<String, dynamic>> request,
+  );
 }
