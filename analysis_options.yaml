@@ -28,4 +28,3 @@ linter:
     avoid_classes_with_only_static_members: false
     public_member_api_docs: false
     omit_local_variable_types: false
-      - flutter_style_todos

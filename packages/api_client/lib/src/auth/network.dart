@@ -68,7 +68,9 @@ class NetworkAuthProvider extends AuthenticationProvider {
     final UserDto userDto = await apiClient.getUserData();
     final UserDataDto userDataDto = userDto.user;
     return UserDataModel(
-      username: userDataDto.username,
+      id: userDataDto.id,
+      name: userDataDto.name,
+      username: userDataDto.displayName,
       telephone: userDataDto.telephone,
       picture: userDataDto.picture,
     );
