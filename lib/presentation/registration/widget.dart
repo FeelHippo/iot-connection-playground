@@ -43,18 +43,18 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
       },
       child: AppScaffold(
         body: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
+                const Text(
                   'Registration Your\nAccount',
                   style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: <Widget>[
                     Expanded(
@@ -62,12 +62,15 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text('Email Address', style: TextStyle(fontSize: 14)),
+                          const Text(
+                            'Email Address',
+                            style: TextStyle(fontSize: 14),
+                          ),
                           CustomTextFormField(
                             controller: _emailController,
                             validator: (String? value) {
                               if (value != null && value.isNotEmpty) {
-                                // TODO: add regex check
+                                // TODO(Filippo): add regex check
                                 return null;
                               }
                               return 'Enter valid email';
@@ -79,7 +82,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: <Widget>[
                     Expanded(
@@ -87,7 +90,10 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text('Username', style: TextStyle(fontSize: 14)),
+                          const Text(
+                            'Username',
+                            style: TextStyle(fontSize: 14),
+                          ),
                           CustomTextFormField(
                             controller: _usernameController,
                             validator: (String? value) {
@@ -103,13 +109,11 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Row(
                   children: <Widget>[
                     Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           MaterialButton(
                             color: Colors.blue,
@@ -118,7 +122,8 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                             ),
                             height: 56,
                             minWidth: MediaQuery.of(context).size.width - 20,
-                            child: Text(
+                            onPressed: _validateRegistration,
+                            child: const Text(
                               'Next',
                               style: TextStyle(
                                 fontSize: 16,
@@ -126,14 +131,13 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                                 color: Colors.white,
                               ),
                             ),
-                            onPressed: _validateRegistration,
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           GestureDetector(
                             onTap: () {
                               context.go('/login');
                             },
-                            child: Text(
+                            child: const Text(
                               'I Do Have an Account',
                               style: TextStyle(fontSize: 12),
                             ),

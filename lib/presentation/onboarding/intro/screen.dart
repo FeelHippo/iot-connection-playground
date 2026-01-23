@@ -12,12 +12,12 @@ class IntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<dynamic>.delayed(
-      Duration(seconds: 1),
-    ).then((_) => context.go('/locales'));
+      const Duration(seconds: 1),
+    ).then((_) => context.go('/register'));
     return AppScaffold(
       body: Consumer<IOC>(
         builder: (BuildContext context, IOC ioc, Widget? child) {
-          return IntroWidget();
+          return const IntroWidget();
         },
       ),
     );

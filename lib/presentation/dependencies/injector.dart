@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:giggle/bloc/auth/auth_bloc.dart';
+import 'package:giggle/bloc/locales/cubit.dart';
 import 'package:giggle/bloc/login/cubit.dart';
 import 'package:giggle/bloc/registration/cubit.dart';
 import 'package:giggle/presentation/dependencies/modules/app_module.dart';
@@ -13,8 +14,6 @@ import 'package:giggle/presentation/dependencies/modules/domain_module.dart';
 import 'package:giggle/presentation/dependencies/modules/network_module.dart';
 import 'package:injector/injector.dart';
 import 'package:storage/main.dart';
-
-import '../../bloc/locales/cubit.dart';
 
 /// Inversion of Control
 /// https://stackoverflow.com/a/3140/10708345

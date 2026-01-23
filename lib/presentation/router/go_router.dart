@@ -4,7 +4,7 @@ import 'package:giggle/presentation/common/circular_progress_bar.dart';
 import 'package:giggle/presentation/home/screen.dart';
 import 'package:giggle/presentation/login/screen.dart';
 import 'package:giggle/presentation/onboarding/intro/screen.dart';
-import 'package:giggle/presentation/onboarding/locales/screen.dart';
+import 'package:giggle/presentation/profile/screen.dart';
 import 'package:giggle/presentation/registration/screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,12 +29,6 @@ final RoutingConfig unauthorizedRoutingConfig = RoutingConfig(
   routes: <RouteBase>[
     GoRoute(path: '/', builder: (_, __) => const IntroScreen()),
     GoRoute(
-      path: '/locales',
-      builder: (BuildContext context, GoRouterState state) {
-        return const LocalesScreen();
-      },
-    ),
-    GoRoute(
       path: '/register',
       builder: (BuildContext context, GoRouterState state) {
         return const RegistrationScreen();
@@ -56,6 +50,11 @@ RoutingConfig authorizedRoutingConfig({Color? selectedItemColor}) {
   final GlobalKey<NavigatorState> shellNavigatorProfileKey =
       GlobalKey<NavigatorState>(debugLabel: 'profile');
   return RoutingConfig(
+    redirect: (BuildContext context, GoRouterState state) {
+      if (state.fullPath?.isEmpty ?? false) {
+        return '/home';
+      }
+    },
     routes: <RouteBase>[
       StatefulShellRoute.indexedStack(
         builder:
@@ -96,7 +95,7 @@ RoutingConfig authorizedRoutingConfig({Color? selectedItemColor}) {
             routes: <RouteBase>[
               GoRoute(
                 path: '/profile',
-                builder: (_, __) => const Text('User Profile Here'),
+                builder: (_, __) => const ProfileScreen(),
                 routes: [
                   GoRoute(
                     path: 'profile/update',
