@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:giggle/presentation/common/app_scaffold.dart';
 import 'package:giggle/presentation/common/circular_progress_bar.dart';
+import 'package:giggle/presentation/home/screen.dart';
+import 'package:giggle/presentation/login/screen.dart';
 import 'package:giggle/presentation/onboarding/intro/screen.dart';
 import 'package:giggle/presentation/onboarding/locales/screen.dart';
+import 'package:giggle/presentation/registration/screen.dart';
 import 'package:go_router/go_router.dart';
-
-import '../home/screen.dart';
-import '../login/screen.dart';
-import '../registration/screen.dart';
-
-final GoRouter router = GoRouter.routingConfig(
-  routingConfig: routingConfig,
-  initialLocation: '/',
-);
 
 final ValueNotifier<RoutingConfig> routingConfig = ValueNotifier<RoutingConfig>(
   RoutingConfig(
@@ -20,10 +14,15 @@ final ValueNotifier<RoutingConfig> routingConfig = ValueNotifier<RoutingConfig>(
       GoRoute(
         path: '/',
         builder: (_, __) =>
-            AppScaffold(body: Center(child: CircularProgressBar())),
+            const AppScaffold(body: Center(child: CircularProgressBar())),
       ),
     ],
   ),
+);
+
+final GoRouter router = GoRouter.routingConfig(
+  routingConfig: routingConfig,
+  initialLocation: '/',
 );
 
 final RoutingConfig unauthorizedRoutingConfig = RoutingConfig(
@@ -50,20 +49,65 @@ final RoutingConfig unauthorizedRoutingConfig = RoutingConfig(
   ],
 );
 
-RoutingConfig authorizedRoutingConfig(bool needsMoreData) {
+RoutingConfig authorizedRoutingConfig({Color? selectedItemColor}) {
+  // https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
+  final GlobalKey<NavigatorState> shellNavigatorHomeKey =
+      GlobalKey<NavigatorState>(debugLabel: 'home');
+  final GlobalKey<NavigatorState> shellNavigatorProfileKey =
+      GlobalKey<NavigatorState>(debugLabel: 'profile');
   return RoutingConfig(
-    redirect: (BuildContext context, GoRouterState state) {
-      if (needsMoreData) {
-        return '/profile';
-      } else {
-        return '/';
-      }
-    },
     routes: <RouteBase>[
-      GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
-      GoRoute(
-        path: '/profile',
-        builder: (_, __) => Container(child: Text('User Profile Here')),
+      StatefulShellRoute.indexedStack(
+        builder:
+            (
+              Object? context,
+              GoRouterState state,
+              StatefulNavigationShell navShell,
+            ) => AppScaffold(
+              body: navShell,
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: navShell.currentIndex,
+                onTap: (int index) => navShell.goBranch(
+                  index,
+                  initialLocation: index == navShell.currentIndex,
+                ),
+                selectedItemColor: selectedItemColor,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: 'Profile',
+                  ),
+                ],
+              ),
+            ),
+        branches: <StatefulShellBranch>[
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorHomeKey,
+            routes: <RouteBase>[
+              GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: shellNavigatorProfileKey,
+            routes: <RouteBase>[
+              GoRoute(
+                path: '/profile',
+                builder: (_, __) => const Text('User Profile Here'),
+                routes: [
+                  GoRoute(
+                    path: 'profile/update',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const Text('User Profile Update Here'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );

@@ -14,6 +14,7 @@ class ScopeConsumerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Consumes t Provider defined @lib/presentation/common/scope_provider_widget.dart
     return Consumer<IOC>(
       builder: (BuildContext context, IOC ioc, Widget? _child) {
         return MultiBlocProvider(
@@ -39,7 +40,7 @@ class ScopeConsumerWidget extends StatelessWidget {
               },
             ),
           ],
-          child: AuthWidget(),
+          child: const AuthWidget(),
         );
       },
     );

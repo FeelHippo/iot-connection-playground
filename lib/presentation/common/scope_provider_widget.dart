@@ -10,15 +10,16 @@ class ScopeProviderWidget extends StatelessWidget {
     required this.scope,
   });
 
-  final Widget child;
   final IOC scope;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    // Creates a value, store it, and expose it to its descendants
     return Provider<IOC>(
       key: key,
       create: (BuildContext context) => scope,
-      dispose: (BuildContext context, IOC value) => value.dispose(),
+      dispose: (BuildContext context, IOC scope) => scope.dispose(),
       child: child,
     );
   }

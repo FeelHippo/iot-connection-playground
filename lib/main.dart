@@ -14,6 +14,7 @@ import 'package:giggle/utils/dashboard_controller.dart';
 import 'bloc/simple_bloc_observer.dart';
 
 Future<void> main() async {
+  // Run the app's body in its own error zone
   await runZonedGuarded<Future<void>>(() async {
     DashboardController.preserve();
 
@@ -47,6 +48,7 @@ Future<void> setUp() async {
 
 class GiggleApp extends StatelessWidget {
   const GiggleApp({super.key, required this.scope});
+
   final IOC scope;
 
   @override

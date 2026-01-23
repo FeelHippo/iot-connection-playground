@@ -20,11 +20,16 @@ class AuthWidget extends StatelessWidget {
         // https://pub.dev/documentation/go_router/latest/topics/Configuration-topic.html
 
         if (authStatus is UnauthorizedAuthUiModel) {
-          routingConfig.value = unauthorizedRoutingConfig;
+          // routingConfig.value = unauthorizedRoutingConfig;
+          // TODO(Filippo): remove below mock
+
+          routingConfig.value = authorizedRoutingConfig(
+            selectedItemColor: Theme.of(context).primaryColorDark,
+          );
         }
         if (authStatus is AuthorizedAuthUiModel) {
           routingConfig.value = authorizedRoutingConfig(
-            authStatus.userData.needsMoreData,
+            selectedItemColor: Theme.of(context).primaryColorDark,
           );
         }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../common/app_scaffold.dart';
 import '../dependencies/injector.dart';
 import 'widget.dart';
 
@@ -10,12 +9,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      body: Consumer<IOC>(
-        builder: (BuildContext context, IOC ioc, Widget? child) {
-          return HomeWidget();
-        },
-      ),
+    return Consumer<IOC>(
+      builder: (BuildContext context, IOC ioc, Widget? child) {
+        return const HomeWidget();
+      },
     );
   }
 }
