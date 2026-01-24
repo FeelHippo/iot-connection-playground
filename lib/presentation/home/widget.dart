@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:giggle/presentation/common/app_scaffold.dart';
 import 'package:giggle/presentation/common/custom_text_form_field.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 
@@ -32,139 +31,136 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      body: Center(
-        child: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () {
-            showModalBottomSheet<void>(
-              context: context,
-              builder: (BuildContext context) {
-                return Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  color: Colors.amber,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text(
-                                'WiFi Connection',
-                                style: TextStyle(
-                                  fontSize: 34,
-                                  fontWeight: FontWeight.bold,
+    return Center(
+      child: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: MediaQuery.of(context).size.height / 2,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                color: Colors.amber,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const Text(
+                              'WiFi Connection',
+                              style: TextStyle(
+                                fontSize: 34,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      const Text(
+                                        'SSID',
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      CustomTextFormField(
+                                        controller: _ssidController,
+                                        validator: (String? value) {
+                                          if (value != null &&
+                                              value.isNotEmpty) {
+                                            return null;
+                                          }
+                                          return 'Enter valid SSID';
+                                        },
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        const Text(
-                                          'SSID',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        CustomTextFormField(
-                                          controller: _ssidController,
-                                          validator: (String? value) {
-                                            if (value != null &&
-                                                value.isNotEmpty) {
-                                              return null;
-                                            }
-                                            return 'Enter valid SSID';
-                                          },
-                                          keyboardType:
-                                              TextInputType.emailAddress,
-                                        ),
-                                      ],
-                                    ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      const Text(
+                                        'Password',
+                                        style: TextStyle(fontSize: 14),
+                                      ),
+                                      CustomTextFormField(
+                                        controller: _passwordController,
+                                        validator: (String? value) {
+                                          if (value != null &&
+                                              value.isNotEmpty) {
+                                            return null;
+                                          }
+                                          return 'Enter valid password';
+                                        },
+                                        keyboardType: TextInputType.text,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        const Text(
-                                          'Password',
-                                          style: TextStyle(fontSize: 14),
-                                        ),
-                                        CustomTextFormField(
-                                          controller: _passwordController,
-                                          validator: (String? value) {
-                                            if (value != null &&
-                                                value.isNotEmpty) {
-                                              return null;
-                                            }
-                                            return 'Enter valid password';
-                                          },
-                                          keyboardType: TextInputType.text,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Column(
-                                      children: <Widget>[
-                                        MaterialButton(
-                                          color: Colors.blue,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              72,
-                                            ),
-                                          ),
-                                          height: 56,
-                                          minWidth:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.width -
-                                              20,
-                                          onPressed: _validateConnection,
-                                          child: const Text(
-                                            'Search for Devices',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(
+                                    children: <Widget>[
+                                      MaterialButton(
+                                        color: Colors.blue,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            72,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                        height: 56,
+                                        minWidth:
+                                            MediaQuery.of(context).size.width -
+                                            20,
+                                        onPressed: _validateConnection,
+                                        child: const Text(
+                                          'Search for Devices',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            );
-          },
-        ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
