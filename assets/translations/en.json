@@ -1,5 +1,11 @@
 {
-  "welcome": "WELCOME\nto",
-  "giggle": "Giggle",
-  "motto": "Life is easy,\none gig at a time."
+  "home": "Home",
+  "profile": "Profile",
+  "connection_bottom_sheet_title": "WiFi Connection",
+  "connection_bottom_sheet_ssid": "SSID",
+  "connection_bottom_sheet_ssid_error": "Enter valid SSID",
+  "connection_bottom_sheet_password": "Password",
+  "connection_bottom_sheet_password_error": "Enter valid password",
+  "connection_bottom_sheet_search": "Search for Devices",
+  "connection_bottom_sheet_connected": "Connected to WiFi"
 }

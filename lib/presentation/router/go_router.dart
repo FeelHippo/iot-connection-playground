@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:giggle/presentation/common/app_scaffold.dart';
 import 'package:giggle/presentation/common/circular_progress_bar.dart';
@@ -59,7 +60,7 @@ RoutingConfig authorizedRoutingConfig({Color? selectedItemColor}) {
       StatefulShellRoute.indexedStack(
         builder:
             (
-              Object? context,
+              BuildContext context,
               GoRouterState state,
               StatefulNavigationShell navShell,
             ) => AppScaffold(
@@ -71,14 +72,14 @@ RoutingConfig authorizedRoutingConfig({Color? selectedItemColor}) {
                   initialLocation: index == navShell.currentIndex,
                 ),
                 selectedItemColor: selectedItemColor,
-                items: const <BottomNavigationBarItem>[
+                items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    label: 'Home',
+                    icon: const Icon(Icons.home),
+                    label: context.tr('home'),
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.person),
-                    label: 'Profile',
+                    icon: const Icon(Icons.person),
+                    label: context.tr('profile'),
                   ),
                 ],
               ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:giggle/presentation/common/custom_text_form_field.dart';
 import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
@@ -53,9 +54,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const Text(
-                              'WiFi Connection',
-                              style: TextStyle(
+                            Text(
+                              context.tr('connection_bottom_sheet_title'),
+                              style: const TextStyle(
                                 fontSize: 34,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -69,9 +70,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      const Text(
-                                        'SSID',
-                                        style: TextStyle(fontSize: 14),
+                                      Text(
+                                        context.tr(
+                                          'connection_bottom_sheet_ssid',
+                                        ),
+                                        style: const TextStyle(fontSize: 14),
                                       ),
                                       CustomTextFormField(
                                         controller: _ssidController,
@@ -80,7 +83,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                               value.isNotEmpty) {
                                             return null;
                                           }
-                                          return 'Enter valid SSID';
+                                          return context.tr(
+                                            'connection_bottom_sheet_ssid_error',
+                                          );
                                         },
                                         keyboardType:
                                             TextInputType.emailAddress,
@@ -99,9 +104,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      const Text(
-                                        'Password',
-                                        style: TextStyle(fontSize: 14),
+                                      Text(
+                                        context.tr(
+                                          'connection_bottom_sheet_password',
+                                        ),
+                                        style: const TextStyle(fontSize: 14),
                                       ),
                                       CustomTextFormField(
                                         controller: _passwordController,
@@ -110,7 +117,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                                               value.isNotEmpty) {
                                             return null;
                                           }
-                                          return 'Enter valid password';
+                                          return context.tr(
+                                            'connection_bottom_sheet_password_error',
+                                          );
                                         },
                                         keyboardType: TextInputType.text,
                                       ),
@@ -137,9 +146,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                             MediaQuery.of(context).size.width -
                                             20,
                                         onPressed: _validateConnection,
-                                        child: const Text(
-                                          'Search for Devices',
-                                          style: TextStyle(
+                                        child: Text(
+                                          context.tr(
+                                            'connection_bottom_sheet_search',
+                                          ),
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
@@ -174,8 +185,11 @@ class _HomeWidgetState extends State<HomeWidget> {
       );
       if (ok ?? false) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Connected to WiFi', textAlign: TextAlign.center),
+          SnackBar(
+            content: Text(
+              context.tr('connection_bottom_sheet_connected'),
+              textAlign: TextAlign.center,
+            ),
           ),
         );
       }
