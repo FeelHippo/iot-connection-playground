@@ -20,6 +20,7 @@ class AppTheme {
       ),
       primaryColor: Palette.primary,
       canvasColor: Palette.primary,
+      cardColor: Palette.secondary,
       highlightColor: Palette.primary.withAlpha(Palette.opacity20),
       splashColor: Palette.primary,
       fontFamily: TextStyles.fontFamily,
@@ -48,8 +49,8 @@ class AppTheme {
 
 class _NoUnderlineInputBorder extends UnderlineInputBorder {
   const _NoUnderlineInputBorder()
-      : super(
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          borderSide: BorderSide.none,
-        );
+    : super(
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
+        borderSide: BorderSide.none,
+      );
 }
