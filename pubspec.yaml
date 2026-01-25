@@ -28,6 +28,10 @@ dependencies:
   storage:
     path: packages/storage
   url_launcher: ^6.3.2
+  mqtt_client: ^10.11.9
+  pem: ^2.0.6
+  encrypt: ^5.0.3
+  basic_utils: ^5.7.0
 
 dev_dependencies:
   build_runner: ^2.4.8

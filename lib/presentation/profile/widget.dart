@@ -11,6 +11,7 @@ class ProfileWidget extends StatelessWidget {
     return AppScaffold(
       body: Center(
         child: FloatingActionButton(
+          key: const Key('logout'),
           child: const Icon(Icons.time_to_leave),
           onPressed: () {
             BlocProvider.of<AuthBloc>(context).add(SignOutAuthEvent());
