@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:mqtt5_client/mqtt5_client.dart';
+import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MqttClientAwsIotCoreWidget extends StatelessWidget {
@@ -24,7 +24,7 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
           ),
           onTap: () => launchUrl(
             Uri.parse(
-              'https://github.com/shamblett/mqtt_client/blob/master/example/aws_iot_certificates.dart',
+              'https://github.com/shamblett/mqtt5_client/blob/master/example/aws_iot_certificates.dart',
             ),
           ),
         ),
@@ -38,25 +38,27 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
     );
   }
 
+  // https://github.com/shamblett/mqtt5_client/blob/master/example/aws_iot_certificates.dart
   Future<void> _connectToASWIoTCore(BuildContext buildContext) async {
     // Your AWS IoT Core endpoint url
     const String url = 'a2eqw4se8i5px2-ats.iot.eu-west-1.amazonaws.com';
     // AWS IoT MQTT default port
     const int port = 8883;
     // The client id unique to your device
-    const String clientId = 'smartThing';
+    // defaults to AWS IoT Device "name"
+    // const String clientId = 'smartThing';
+    // MQTT test client:
+    const String clientId = 'iotconsole-4cc4a684-a14b-473f-a4dc-99911ef994a8';
 
     // Create the client
-    final MqttServerClient
-    client = MqttServerClient.withPort(url, clientId, port)
-      // Set secure
-      ..secure = true
-      // Set Keep-Alive
-      ..keepAlivePeriod = 20
-      // Set the protocol to V3.1.1 for AWS IoT Core, if you fail to do this you will not receive a connect ack with the response code
-      ..setProtocolV311()
-      // logging if you wish
-      ..logging(on: true);
+    final MqttServerClient client =
+        MqttServerClient.withPort(url, clientId, port)
+          // Set secure
+          ..secure = true
+          // Set Keep-Alive
+          ..keepAlivePeriod = 20
+          // logging if you wish
+          ..logging(on: true);
 
     // Set the security context as you need, note this is the standard Dart SecurityContext class.
     // If this is incorrect the TLS handshake will abort and a Handshake exception will be raised,
@@ -67,6 +69,24 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
     // https://github.com/flutter/flutter/issues/39190
     // to convert certificate file into base64:
     // cat smartThing.private.key | base64 -w0
+
+    // https://docs.aws.amazon.com/iot/latest/developerguide/diagnosing-connectivity-issues.html
+    // to verify certs allow to establish a connection to AWS
+    // openssl s_client -connect a2eqw4se8i5px2-ats.iot.eu-west-1.amazonaws.com:8443 -CAfile root-CA.crt -cert c145d9c1c7e799778bebbada415dadbd22f16a36b66c333e5a9baa186d0f4414-certificate.pem.crt -key smartThing.private.key
+    // (from where the cert files are stored). Example response
+    // SSL handshake has read 5609 bytes and written 2823 bytes
+    // Verification: OK
+    // ---
+    //     New, TLSv1.3, Cipher is TLS_AES_128_GCM_SHA256
+    // Protocol: TLSv1.3
+    // Server public key is 2048 bit
+    // This TLS version forbids renegotiation.
+    // Compression: NONE
+    // Expansion: NONE
+    // No ALPN negotiated
+    // Early data was not sent
+    // Verify return code: 0 (ok)
+    // ---
 
     // https://stackoverflow.com/a/59542026
     // the Root Certificate Authority is publicly shared by AWS:
@@ -136,21 +156,24 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
 
       // Publish to a topic of your choice after a slight delay, AWS seems to need this
       await MqttUtilities.asyncSleep(1);
-      const String topic = r'$aws/things/smartThing/test/FeelHippo';
-      final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder()
-        ..addString('Hello World');
+      // make sure the topic is whitelisted by the AWS IoT Cert Policy
+      // https://eu-west-1.console.aws.amazon.com/iot/home?region=eu-west-1#/policy/smartThing-Policy
+      const String topic = 'sdk/test/dart';
+      final MqttPayloadBuilder builder = MqttPayloadBuilder()
+        ..addString('{ "message": "Hello World" }');
+
       // Important: AWS IoT Core can only handle QOS of 0 or 1. QOS 2 (exactlyOnce) will fail!
       client
         ..publishMessage(topic, MqttQos.atLeastOnce, builder.payload!)
-        // Subscribe to the same topic
         ..subscribe(
           topic,
           MqttQos.atLeastOnce,
         ); // TODO(Filippo): blocker is here https://github.com/shamblett/mqtt_client/issues/640
+
       // Print incoming messages from another client on this topic
-      client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+      client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
-        final String pt = MqttPublishPayload.bytesToStringAsString(
+        final String pt = MqttPublishPayload.bytesToString(
           recMess.payload.message,
         );
         ScaffoldMessenger.of(buildContext).showSnackBar(
