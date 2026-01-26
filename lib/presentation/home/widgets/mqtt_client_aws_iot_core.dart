@@ -136,14 +136,17 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
 
       // Publish to a topic of your choice after a slight delay, AWS seems to need this
       await MqttUtilities.asyncSleep(1);
-      const String topic = r'$aws/things/smartThing/shadow/update/documents';
+      const String topic = r'$aws/things/smartThing/test/FeelHippo';
       final MqttClientPayloadBuilder builder = MqttClientPayloadBuilder()
         ..addString('Hello World');
       // Important: AWS IoT Core can only handle QOS of 0 or 1. QOS 2 (exactlyOnce) will fail!
       client
         ..publishMessage(topic, MqttQos.atLeastOnce, builder.payload!)
         // Subscribe to the same topic
-        ..subscribe(topic, MqttQos.atLeastOnce);
+        ..subscribe(
+          topic,
+          MqttQos.atLeastOnce,
+        ); // TODO(Filippo): blocker is here https://github.com/shamblett/mqtt_client/issues/640
       // Print incoming messages from another client on this topic
       client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
