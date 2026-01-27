@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -39,6 +40,13 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
   }
 
   // https://github.com/shamblett/mqtt5_client/blob/master/example/aws_iot_certificates.dart
+  // How to test:
+  // - run app
+  // - tap on "AWS IoT Core MQTT broker and publisher"
+  // - go to AWS IoT Console's MQTT test client
+  // - subscribe to topic "sdk/test/dart"
+  // - publish a message
+  // - observe the message being displayed in app
   Future<void> _connectToASWIoTCore(BuildContext buildContext) async {
     // Your AWS IoT Core endpoint url
     const String url = 'a2eqw4se8i5px2-ats.iot.eu-west-1.amazonaws.com';
@@ -46,9 +54,7 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
     const int port = 8883;
     // The client id unique to your device
     // defaults to AWS IoT Device "name"
-    // const String clientId = 'smartThing';
-    // MQTT test client:
-    const String clientId = 'iotconsole-4cc4a684-a14b-473f-a4dc-99911ef994a8';
+    const String clientId = 'smartThing';
 
     // Create the client
     final MqttServerClient client =
@@ -173,15 +179,19 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
       // Print incoming messages from another client on this topic
       client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
         final MqttPublishMessage recMess = c[0].payload as MqttPublishMessage;
-        final String pt = MqttPublishPayload.bytesToString(
-          recMess.payload.message,
-        );
-        ScaffoldMessenger.of(buildContext).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(buildContext).colorScheme.secondary,
-            content: Text(pt, textAlign: TextAlign.center),
-          ),
-        );
+
+        if (recMess.payload.message != null) {
+          final String pt = const Utf8Decoder().convert(
+            recMess.payload.message!.toList(),
+          );
+          final dynamic message = jsonDecode(pt)['message'];
+          ScaffoldMessenger.of(buildContext).showSnackBar(
+            SnackBar(
+              backgroundColor: Theme.of(buildContext).colorScheme.secondary,
+              content: Text(message.toString(), textAlign: TextAlign.center),
+            ),
+          );
+        }
       });
     } else {
       ScaffoldMessenger.of(buildContext).showSnackBar(

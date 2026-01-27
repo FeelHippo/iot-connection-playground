@@ -51,13 +51,11 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
   // AWS IoT Core Simplified
   // https://dev.to/slootjes/aws-iot-core-simplified-part-1-permissions-k4d
 
+  // BLOCKER: https://repost.aws/questions/QUrwQ2-a0pTYGDRtNNWtx0qw/mqtt-over-websocket-signature-version-4-http-1-1-403
+
   Future<void> _connectToASWWebSocket(BuildContext buildContext) async {
     const String region = 'eu-west-1';
-    // Connecting to AWS IoT Core
-    // MQTT over WSS: wss://iot-endpoint/mqtt
-    // Your AWS IoT Core endpoint url
     const String endpoint = 'a2eqw4se8i5px2-ats.iot.eu-west-1.amazonaws.com';
-    const String canonicalRequest = 'wss://$endpoint/mqtt';
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // On mobile and web, this means using the Dart environment which is configured by passing the --dart-define flag to your flutter commands, e.g.
@@ -70,27 +68,35 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
     );
     final AWSHttpRequest request = AWSHttpRequest(
       method: AWSHttpMethod.get,
-      uri: Uri.parse(canonicalRequest),
+      uri: Uri(scheme: 'wss', host: endpoint, path: 'mqtt', port: 443),
     );
+
+    const ServiceConfiguration serviceConfig = ServiceConfiguration(
+      omitSessionToken: true,
+      signBody: true,
+    );
+
+    const Duration expiration = Duration(seconds: 3600);
 
     // Sign and send the HTTP request
     final Uri signedRequest = await signer.presign(
       request,
       credentialScope: scope,
-      expiresIn: const Duration(hours: 1),
+      serviceConfiguration: serviceConfig,
+      expiresIn: expiration,
     );
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // The client id unique to your device
     // defaults to AWS IoT Device "name"
-    // const String clientId = 'smartThing';
-    // MQTT test client:
-    const String clientId = 'iotconsole-4cc4a684-a14b-473f-a4dc-99911ef994a8';
+    const String clientId = 'smartThing';
 
     // Create the client
     final MqttServerClient client =
-        MqttServerClient(signedRequest.toString(), clientId)
+        MqttServerClient(signedRequest.toString(), '')
           ..useWebSocket = true
+          ..useAlternateWebSocketImplementation = true
+          ..port = 443
           ..logging(on: true)
           ..keepAlivePeriod = 20;
 
