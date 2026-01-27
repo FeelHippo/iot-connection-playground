@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:giggle/presentation/home/models/render_model.dart';
 import 'package:giggle/presentation/home/widgets/mqtt_client_aws_iot_core.dart';
+import 'package:giggle/presentation/home/widgets/mqtt_client_aws_websocket.dart';
 import 'package:giggle/presentation/home/widgets/plugin_wifi_connect.dart';
 
 class HomeWidget extends StatelessWidget {
@@ -13,6 +14,7 @@ class HomeWidget extends StatelessWidget {
   ];
   static List<Widget> widgetsMQTT = <Widget>[
     const MqttClientAwsIotCoreWidget(),
+    const MqttClientAwsWebSocketWidget(),
   ];
 
   static List<RenderModel> renderGroups = <RenderModel>[
