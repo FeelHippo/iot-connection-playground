@@ -89,11 +89,11 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
 
     // The client id unique to your device
     // defaults to AWS IoT Device "name"
-    const String clientId = 'smartThing';
+    const String clientId = 'smartThing-mezzasegolas@gmail.com';
 
     // Create the client
     final MqttServerClient client =
-        MqttServerClient(signedRequest.toString(), '')
+        MqttServerClient(signedRequest.toString(), clientId)
           ..useWebSocket = true
           ..useAlternateWebSocketImplementation = true
           ..port = 443
