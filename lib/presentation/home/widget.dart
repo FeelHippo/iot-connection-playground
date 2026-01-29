@@ -27,46 +27,49 @@ class HomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: renderGroups
-          .map(
-            (RenderModel model) => Column(
-              children: <Widget>[
-                Text(
-                  model.title,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: renderGroups
+            .map(
+              (RenderModel model) => Column(
+                children: <Widget>[
+                  Text(
+                    model.title,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height / 4,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: model.widgets.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (_, int index) => Card(
-                            color: Theme.of(context).cardColor,
-                            clipBehavior: Clip.hardEdge,
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              width: MediaQuery.of(context).size.width / 1.5,
-                              child: model.widgets[index],
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height / 4,
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: model.widgets.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (_, int index) => Card(
+                              color: Theme.of(context).cardColor,
+                              clipBehavior: Clip.hardEdge,
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                width: MediaQuery.of(context).size.width / 1.5,
+                                child: model.widgets[index],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          )
-          .toList(),
+                    ],
+                  ),
+                ],
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }

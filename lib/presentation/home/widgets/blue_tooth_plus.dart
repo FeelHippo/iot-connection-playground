@@ -14,7 +14,7 @@ class BlueToothPlusWidget extends StatefulWidget {
 }
 
 class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
-  late StreamSubscription<BluetoothAdapterState> _adapterStateStateSubscription;
+  StreamSubscription<BluetoothAdapterState>? _adapterStateStateSubscription;
 
   @override
   void initState() {
@@ -49,7 +49,9 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
         }
       },
       onExitRequested: () async {
-        await _adapterStateStateSubscription.cancel();
+        if (_adapterStateStateSubscription != null) {
+          await _adapterStateStateSubscription!.cancel();
+        }
         return AppExitResponse.exit;
       },
     );
@@ -57,7 +59,9 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
 
   @override
   void dispose() {
-    _adapterStateStateSubscription.cancel();
+    if (_adapterStateStateSubscription != null) {
+      _adapterStateStateSubscription!.cancel();
+    }
     super.dispose();
   }
 
@@ -70,15 +74,16 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
         InkWell(
           child: const Text(
             'Bluetooth Low Energy plugin',
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 20),
           ),
           onTap: () => launchUrl(
             Uri.parse('https://pub.dev/packages/flutter_blue_plus'),
           ),
         ),
         FloatingActionButton(
+          mini: true,
           key: const Key('mqtt_client_aws_iot_core'),
-          heroTag: 'mqtt_client_aws_iot_core',
+          heroTag: 'blue_tooth_plus',
           onPressed: _connectToBlueTooth,
           child: const Icon(Icons.add),
         ),
@@ -87,11 +92,13 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
   }
 
   Future<void> _connectToBlueTooth() async {
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     // listen to scan results
     final StreamSubscription<List<ScanResult>>
     subscription = FlutterBluePlus.onScanResults.listen((
       List<ScanResult> results,
-    ) {
+    ) async {
       if (results.isNotEmpty) {
         final ScanResult r = results.last;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -104,6 +111,19 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
           ),
         );
         final BluetoothDevice device = r.device;
+        // Note: You must call discoverServices after every re-connection!
+        final List<BluetoothService> services = await device.discoverServices();
+        for (final BluetoothService service in services) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              content: Text(
+                '${service.remoteId}" service UID found!',
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
         // listen for disconnection
         final StreamSubscription<BluetoothConnectionState>
         subscription = device.connectionState.listen((
@@ -135,18 +155,19 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
         device.cancelWhenDisconnected(subscription, delayed: true, next: true);
 
         // Connect to the device
-        await device.connect();
+        await device.connect(license: License.free);
       }
     }, onError: print);
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
     // cleanup: cancel subscription when scanning stops
     FlutterBluePlus.cancelWhenScanComplete(subscription);
     // Start scanning w/ timeout
-    await FlutterBluePlus.startScan(
-      withServices: <Guid>[Guid('180D')],
-      withNames: <String>['Bluno'],
-      timeout: const Duration(seconds: 15),
-    );
+    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
     // wait for scanning to stop
     await FlutterBluePlus.isScanning.where((bool val) => val == false).first;
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   }
 }

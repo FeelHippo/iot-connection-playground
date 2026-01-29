@@ -55,6 +55,9 @@ class GiggleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopeProviderWidget(scope: scope, child: ScopeConsumerWidget());
+    return ScopeProviderWidget(
+      scope: scope,
+      child: const ScopeConsumerWidget(),
+    );
   }
 }

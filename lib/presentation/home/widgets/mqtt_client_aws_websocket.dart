@@ -20,7 +20,7 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
         InkWell(
           child: const Text(
             'AWS IoT Core MQTT over WSS',
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 20),
           ),
           onTap: () => launchUrl(
             Uri.parse(
@@ -29,6 +29,7 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
           ),
         ),
         FloatingActionButton(
+          mini: true,
           key: const Key('mqtt_client_aws_iot_core'),
           heroTag: 'mqtt_client_aws_websocket',
           child: const Icon(Icons.add),

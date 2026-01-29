@@ -45,12 +45,13 @@ class _PluginWifiConnectWidgetState extends State<PluginWifiConnectWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         InkWell(
-          child: const Text('WiFI Connect', style: TextStyle(fontSize: 24)),
+          child: const Text('WiFI Connect', style: TextStyle(fontSize: 20)),
           onTap: () => launchUrl(
             Uri.parse('https://github.com/chenrilima/plugin_wifi_connect'),
           ),
         ),
         FloatingActionButton(
+          mini: true,
           key: const Key('plugin_wifi_connect'),
           heroTag: 'plugin_wifi_connect',
           child: const Icon(Icons.add),

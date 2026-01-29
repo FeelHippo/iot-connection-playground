@@ -14,6 +14,7 @@ class AppScaffold extends StatefulWidget {
     this.bottomNavigationBar,
     this.resizeToAvoidBottomPadding = true,
   });
+
   final Widget body;
   final PreferredSizeWidget? appBar;
   final SystemUiOverlayStyle? systemUiOverlayStyleIOS;
@@ -84,7 +85,16 @@ class AppScaffoldState extends State<AppScaffold> {
     }
 
     return Scaffold(
-      appBar: widget.appBar,
+      appBar:
+          widget.appBar ??
+          AppBar(
+            toolbarHeight: 0,
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              systemNavigationBarColor: Theme.of(context).colorScheme.secondary,
+              systemNavigationBarIconBrightness: Brightness.light,
+            ),
+          ),
       resizeToAvoidBottomInset: widget.resizeToAvoidBottomPadding,
       bottomNavigationBar: widget.bottomNavigationBar,
       body: Stack(
@@ -115,9 +125,15 @@ class AppScaffoldState extends State<AppScaffold> {
   SystemUiOverlayStyle _themeSystemUiOverlayStyle(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final SystemUiOverlayStyle overlayStyle =
-        theme.brightness == Brightness.dark
-        ? SystemUiOverlayStyle.light
-        : SystemUiOverlayStyle.dark;
+        theme.brightness == Brightness.light
+        ? SystemUiOverlayStyle.dark.copyWith(
+            statusBarColor: theme.colorScheme.primary,
+            systemNavigationBarColor: theme.colorScheme.primary,
+          )
+        : SystemUiOverlayStyle.dark.copyWith(
+            statusBarColor: theme.colorScheme.primary,
+            systemNavigationBarColor: theme.colorScheme.primary,
+          );
     return overlayStyle;
   }
 }

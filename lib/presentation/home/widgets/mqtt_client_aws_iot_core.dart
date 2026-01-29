@@ -21,7 +21,7 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
         InkWell(
           child: const Text(
             'AWS IoT Core MQTT broker and publisher',
-            style: TextStyle(fontSize: 24),
+            style: TextStyle(fontSize: 20),
           ),
           onTap: () => launchUrl(
             Uri.parse(
@@ -30,6 +30,7 @@ class MqttClientAwsIotCoreWidget extends StatelessWidget {
           ),
         ),
         FloatingActionButton(
+          mini: true,
           key: const Key('mqtt_client_aws_iot_core'),
           heroTag: 'mqtt_client_aws_iot_core',
           child: const Icon(Icons.add),
