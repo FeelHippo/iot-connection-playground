@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:giggle/presentation/home/models/render_model.dart';
-import 'package:giggle/presentation/home/widgets/blue_tooth_plus.dart';
+import 'package:giggle/presentation/home/widgets/blue_tooth_classic.dart';
+import 'package:giggle/presentation/home/widgets/blue_tooth_low_energy.dart';
 import 'package:giggle/presentation/home/widgets/mqtt_client_aws_iot_core.dart';
 import 'package:giggle/presentation/home/widgets/mqtt_client_aws_websocket.dart';
 import 'package:giggle/presentation/home/widgets/plugin_wifi_connect.dart';
@@ -17,7 +18,10 @@ class HomeWidget extends StatelessWidget {
     const MqttClientAwsIotCoreWidget(),
     const MqttClientAwsWebSocketWidget(),
   ];
-  static List<Widget> widgetsBlueTooth = <Widget>[const BlueToothPlusWidget()];
+  static List<Widget> widgetsBlueTooth = <Widget>[
+    const BlueToothClassicWidget(),
+    const BlueToothLowEnergyWidget(),
+  ];
 
   static List<RenderModel> renderGroups = <RenderModel>[
     RenderModel(title: 'WiFi', widgets: widgetsWiFi),

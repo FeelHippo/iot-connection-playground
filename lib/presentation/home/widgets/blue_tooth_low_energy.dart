@@ -6,14 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class BlueToothPlusWidget extends StatefulWidget {
-  const BlueToothPlusWidget({super.key});
+class BlueToothLowEnergyWidget extends StatefulWidget {
+  const BlueToothLowEnergyWidget({super.key});
 
   @override
-  State<BlueToothPlusWidget> createState() => _BlueToothPlusWidgetState();
+  State<BlueToothLowEnergyWidget> createState() =>
+      _BlueToothLowEnergyWidgetState();
 }
 
-class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
+class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
   StreamSubscription<BluetoothAdapterState>? _adapterStateStateSubscription;
 
   @override
@@ -73,7 +74,7 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
       children: <Widget>[
         InkWell(
           child: const Text(
-            'Bluetooth Low Energy plugin',
+            'Bluetooth Low Energy',
             style: TextStyle(fontSize: 20),
           ),
           onTap: () => launchUrl(
@@ -82,7 +83,7 @@ class _BlueToothPlusWidgetState extends State<BlueToothPlusWidget> {
         ),
         FloatingActionButton(
           mini: true,
-          key: const Key('mqtt_client_aws_iot_core'),
+          key: const Key('blue_tooth_plus'),
           heroTag: 'blue_tooth_plus',
           onPressed: _connectToBlueTooth,
           child: const Icon(Icons.add),

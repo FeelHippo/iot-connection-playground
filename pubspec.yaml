@@ -35,6 +35,8 @@ dependencies:
   aws_common: ^0.7.12
   aws_signature_v4: ^0.6.10
   flutter_blue_plus: ^2.1.0
+  bluetooth_classic: ^0.0.4
+  device_info_plus: ^11.5.0
 
 dev_dependencies:
   build_runner: ^2.4.8
