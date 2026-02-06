@@ -53,28 +53,55 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
   // https://dev.to/slootjes/aws-iot-core-simplified-part-1-permissions-k4d
 
   // BLOCKER: https://repost.aws/questions/QUrwQ2-a0pTYGDRtNNWtx0qw/mqtt-over-websocket-signature-version-4-http-1-1-403
+  // https://repost.aws/questions/QU-zwByDFvRve57kJEeIu0BQ/generate-a-presigned-url-with-aws-iot-device-sdk-embedded-c
+  // https://repost.aws/questions/QUy0UvJxbHQ2CnooSaimpaXw/iot-credentials-for-aws-403-debug
+  // https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html
+  //https://aws.amazon.com/blogs/security/how-to-eliminate-the-need-for-hardcoded-aws-credentials-in-devices-by-using-the-aws-iot-credentials-provider/
+
+  // useful commands:
+  // returns the credential provider's address
+  // aws iot describe-endpoint --endpoint-type iot:CredentialProvider
+  // returns the IoT Role Alias => check if the IAM role is used
+  // aws iot describe-role-alias --role-alias smartThingAdminRoleAlias
+  // reutrns the IAM Role
+  // aws iam get-role --role-name smartThingAdminRole
+  // obtain your AWS account-specific endpoint for the credentials provider
+  // aws iot describe-endpoint --endpoint-type iot:CredentialProvider
+  // {
+  // "endpointAddress": "cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com"
+  // }
+  // HTTPS request to the credentials provider to fetch a security token
+  // curl --cert c145d9c1c7e799778bebbada415dadbd22f16a36b66c333e5a9baa186d0f4414-certificate.pem.crt --key smartThing.private.key -H "x-amzn-iot-thingname: smartThing" https://cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com/role-aliases/smartThingAdminRoleAlias/credentials
+  // {"credentials":{"accessKeyId":"ASIAUCCMJ5DSWNRZAZ5U","secretAccessKey":"ya/tmlo+hWsy8KkO48heMnXZMe07jqhxC/5UIMFN","sessionToken":"IQoJb3JpZ2luX2VjEH0aCWV1LXdlc3QtMSJHMEUCIQDL7xpju5RfYA92Vv1ohzvc/tIVcKftC0LdEMGNzMTlHwIgGk2R8SCo/vvI9zyqVM4a+PsdjoCYUTTWADtIWDOQv2gqvgMIRhAAGgwyNzkzMzI5MDcyMzciDLeFjfYS6xKSRXP8WCqbA+WqQGRCURSJwp0ssLYQCwZnkLIAmYDBOSWbWI/len68QdDCqIQdjm6qtCzb5fecXPuxfZwRrtuWDYakrQrMB0dS6KICWtJHeA6BMf1QrmT7s8Kd3ZAcTvx0JmDmfZM/VeSnX+1/cGMSwXqb49O7k7fjgxaXygnykFEEMF+6VVtang91xBDeaWzmQBWnZRrJGeT3DxQmeUQUbiI4yYA3zL/hM67v0yiqyw6qelFve1LSuY7L6sUMbkcqk0NfxFrolNmcQGDGSL0PMTcdCBFktnnP6j22JeNvkFW5lTYy7AmstfRJ61LM/nzD1p5oEiRTsgmAXKO+o4sRRPsKLz+rq0ohFmfY68wl56ZpBV/1g3Sity4MtciHvWDX51X+XkX8GRsgHraQgEwjOdAjae1IsY1jdgpEV08eIU8DRCyEdCGW6mOw7dmFDevfiB26ve+NtF5DdvEroFd/7kRoDxSbMxsCvPba/P1FO4ZFP13gUvDQRbD8jTIXrSvynnfRtj1slzIaUEoP1zZ7UVRZZ7Jg/MqinzQG9h6vMnVkaDDyzpfMBjqUAbMmsfpQLL/ediHUXGF/SQaEeYY+PO+X8GWpbxZ7ddVdCTkGot0Il4ASHllxcpgOTWWySgurfWRTFagzbqKphCKesRh4dwx8DRc/CNAW1THazSQNlk9ox/ITbNf/SX0QQztkPLHcfiukruxQCNSNf3pQ9DzhCiU9aFPxC8NSjiCujbU3gVU+FQ7ePzdONa9aKGNEjv0=","expiration":"2026-02-06T14:06:58Z"}}⏎
 
   Future<void> _connectToASWWebSocket(BuildContext buildContext) async {
     const String region = 'eu-west-1';
     const String endpoint = 'a2eqw4se8i5px2-ats.iot.eu-west-1.amazonaws.com';
+    const String credentialProvider =
+        'cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com';
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // On mobile and web, this means using the Dart environment which is configured by passing the --dart-define flag to your flutter commands, e.g.
     // $ flutter run --dart-define=AWS_ACCESS_KEY_ID=... --dart-define=AWS_SECRET_ACCESS_KEY=...
-    const AWSSigV4Signer signer = AWSSigV4Signer();
+    const AWSSigV4Signer signer = AWSSigV4Signer(
+      credentialsProvider: AWSCredentialsProvider(
+        AWSCredentials(
+          'ASIAUCCMJ5DSWNRZAZ5U',
+          'ya/tmlo+hWsy8KkO48heMnXZMe07jqhxC/5UIMFN',
+          'IQoJb3JpZ2luX2VjEH0aCWV1LXdlc3QtMSJHMEUCIQDL7xpju5RfYA92Vv1ohzvc/tIVcKftC0LdEMGNzMTlHwIgGk2R8SCo/vvI9zyqVM4a+PsdjoCYUTTWADtIWDOQv2gqvgMIRhAAGgwyNzkzMzI5MDcyMzciDLeFjfYS6xKSRXP8WCqbA+WqQGRCURSJwp0ssLYQCwZnkLIAmYDBOSWbWI/len68QdDCqIQdjm6qtCzb5fecXPuxfZwRrtuWDYakrQrMB0dS6KICWtJHeA6BMf1QrmT7s8Kd3ZAcTvx0JmDmfZM/VeSnX+1/cGMSwXqb49O7k7fjgxaXygnykFEEMF+6VVtang91xBDeaWzmQBWnZRrJGeT3DxQmeUQUbiI4yYA3zL/hM67v0yiqyw6qelFve1LSuY7L6sUMbkcqk0NfxFrolNmcQGDGSL0PMTcdCBFktnnP6j22JeNvkFW5lTYy7AmstfRJ61LM/nzD1p5oEiRTsgmAXKO+o4sRRPsKLz+rq0ohFmfY68wl56ZpBV/1g3Sity4MtciHvWDX51X+XkX8GRsgHraQgEwjOdAjae1IsY1jdgpEV08eIU8DRCyEdCGW6mOw7dmFDevfiB26ve+NtF5DdvEroFd/7kRoDxSbMxsCvPba/P1FO4ZFP13gUvDQRbD8jTIXrSvynnfRtj1slzIaUEoP1zZ7UVRZZ7Jg/MqinzQG9h6vMnVkaDDyzpfMBjqUAbMmsfpQLL/ediHUXGF/SQaEeYY+PO+X8GWpbxZ7ddVdCTkGot0Il4ASHllxcpgOTWWySgurfWRTFagzbqKphCKesRh4dwx8DRc/CNAW1THazSQNlk9ox/ITbNf/SX0QQztkPLHcfiukruxQCNSNf3pQ9DzhCiU9aFPxC8NSjiCujbU3gVU+FQ7ePzdONa9aKGNEjv0=","expiration":"2026-02-06T14:06:58Z',
+        ),
+      ),
+    );
     // Create the signing scope and HTTP request
     final AWSCredentialScope scope = AWSCredentialScope(
       region: region,
       service: AWSService.iot,
+      dateTime: AWSDateTime.now(),
     );
     final AWSHttpRequest request = AWSHttpRequest(
       method: AWSHttpMethod.get,
       uri: Uri(scheme: 'wss', host: endpoint, path: 'mqtt', port: 443),
-    );
-
-    const ServiceConfiguration serviceConfig = ServiceConfiguration(
-      omitSessionToken: true,
-      signBody: true,
+      headers: const <String, String>{'host_name': credentialProvider},
     );
 
     const Duration expiration = Duration(seconds: 3600);
@@ -83,7 +110,6 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
     final Uri signedRequest = await signer.presign(
       request,
       credentialScope: scope,
-      serviceConfiguration: serviceConfig,
       expiresIn: expiration,
     );
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

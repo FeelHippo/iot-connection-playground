@@ -215,6 +215,10 @@ class _PluginWifiConnectWidgetState extends State<PluginWifiConnectWidget> {
             ),
           ),
         );
+        // TODO(Filippo): HTTP call to device's IP -- TBD
+        // Certificates: AWS Secrets
+        // Handshake: POST mobile -> IoT device
+        // Payload: { "endpoint", "port", "certCA", "deviceCert", "privateCert" }
       }
     }
   }
