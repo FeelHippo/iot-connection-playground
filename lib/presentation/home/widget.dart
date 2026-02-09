@@ -16,7 +16,7 @@ class HomeWidget extends StatelessWidget {
   ];
   static List<Widget> widgetsMQTT = <Widget>[
     const MqttClientAwsIotCoreWidget(),
-    const MqttClientAwsWebSocketWidget(),
+    MqttClientAwsWebSocketWidget(),
   ];
   static List<Widget> widgetsBlueTooth = <Widget>[
     const BlueToothClassicWidget(),

@@ -1,15 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:aws_common/aws_common.dart';
 import 'package:aws_signature_v4/aws_signature_v4.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MqttClientAwsWebSocketWidget extends StatelessWidget {
-  const MqttClientAwsWebSocketWidget({super.key});
+  MqttClientAwsWebSocketWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,7 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
   // https://repost.aws/questions/QU-zwByDFvRve57kJEeIu0BQ/generate-a-presigned-url-with-aws-iot-device-sdk-embedded-c
   // https://repost.aws/questions/QUy0UvJxbHQ2CnooSaimpaXw/iot-credentials-for-aws-403-debug
   // https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html
-  //https://aws.amazon.com/blogs/security/how-to-eliminate-the-need-for-hardcoded-aws-credentials-in-devices-by-using-the-aws-iot-credentials-provider/
+  // https://aws.amazon.com/blogs/security/how-to-eliminate-the-need-for-hardcoded-aws-credentials-in-devices-by-using-the-aws-iot-credentials-provider/
 
   // useful commands:
   // returns the credential provider's address
@@ -81,22 +85,46 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
         'cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com';
 
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // On mobile and web, this means using the Dart environment which is configured by passing the --dart-define flag to your flutter commands, e.g.
-    // $ flutter run --dart-define=AWS_ACCESS_KEY_ID=... --dart-define=AWS_SECRET_ACCESS_KEY=...
-    const AWSSigV4Signer signer = AWSSigV4Signer(
-      credentialsProvider: AWSCredentialsProvider(
-        AWSCredentials(
-          'ASIAUCCMJ5DSWNRZAZ5U',
-          'ya/tmlo+hWsy8KkO48heMnXZMe07jqhxC/5UIMFN',
-          'IQoJb3JpZ2luX2VjEH0aCWV1LXdlc3QtMSJHMEUCIQDL7xpju5RfYA92Vv1ohzvc/tIVcKftC0LdEMGNzMTlHwIgGk2R8SCo/vvI9zyqVM4a+PsdjoCYUTTWADtIWDOQv2gqvgMIRhAAGgwyNzkzMzI5MDcyMzciDLeFjfYS6xKSRXP8WCqbA+WqQGRCURSJwp0ssLYQCwZnkLIAmYDBOSWbWI/len68QdDCqIQdjm6qtCzb5fecXPuxfZwRrtuWDYakrQrMB0dS6KICWtJHeA6BMf1QrmT7s8Kd3ZAcTvx0JmDmfZM/VeSnX+1/cGMSwXqb49O7k7fjgxaXygnykFEEMF+6VVtang91xBDeaWzmQBWnZRrJGeT3DxQmeUQUbiI4yYA3zL/hM67v0yiqyw6qelFve1LSuY7L6sUMbkcqk0NfxFrolNmcQGDGSL0PMTcdCBFktnnP6j22JeNvkFW5lTYy7AmstfRJ61LM/nzD1p5oEiRTsgmAXKO+o4sRRPsKLz+rq0ohFmfY68wl56ZpBV/1g3Sity4MtciHvWDX51X+XkX8GRsgHraQgEwjOdAjae1IsY1jdgpEV08eIU8DRCyEdCGW6mOw7dmFDevfiB26ve+NtF5DdvEroFd/7kRoDxSbMxsCvPba/P1FO4ZFP13gUvDQRbD8jTIXrSvynnfRtj1slzIaUEoP1zZ7UVRZZ7Jg/MqinzQG9h6vMnVkaDDyzpfMBjqUAbMmsfpQLL/ediHUXGF/SQaEeYY+PO+X8GWpbxZ7ddVdCTkGot0Il4ASHllxcpgOTWWySgurfWRTFagzbqKphCKesRh4dwx8DRc/CNAW1THazSQNlk9ox/ITbNf/SX0QQztkPLHcfiukruxQCNSNf3pQ9DzhCiU9aFPxC8NSjiCujbU3gVU+FQ7ePzdONa9aKGNEjv0=","expiration":"2026-02-06T14:06:58Z',
-        ),
+    final String cert = await rootBundle.loadString(
+      'assets/certificates/c145d9c1c7e799778bebbada415dadbd22f16a36b66c333e5a9baa186d0f4414-certificate.pem.crt',
+    );
+    final String key = await rootBundle.loadString(
+      'assets/certificates/smartThing.private.key',
+    );
+    final SecurityContext context = SecurityContext.defaultContext
+      ..useCertificateChainBytes(utf8.encode(cert))
+      ..usePrivateKeyBytes(utf8.encode(key));
+    final HttpClient httpClient = HttpClient(context: context);
+    final IOClient awsClient = IOClient(httpClient);
+    final http.Response credentials = await awsClient.get(
+      Uri.parse(
+        'https://cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com/role-aliases/smartThingAdminRoleAlias/credentials',
       ),
+      headers: <String, String>{'x-amzn-iot-thingname': 'smartThing'},
+    );
+
+    // TODO(Filippo): add proper Data Model
+    final dynamic parsedBody = jsonDecode(credentials.body);
+    final String accessKeyId =
+        parsedBody['credentials']['accessKeyId'] as String;
+    final String secretAccessKey =
+        parsedBody['credentials']['secretAccessKey'] as String;
+    final String sessionToken =
+        parsedBody['credentials']['sessionToken'] as String;
+    final AWSCredentials awsCredentials = AWSCredentials(
+      accessKeyId,
+      secretAccessKey,
+      sessionToken,
+    );
+
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    final AWSSigV4Signer signer = AWSSigV4Signer(
+      credentialsProvider: AWSCredentialsProvider(awsCredentials),
     );
     // Create the signing scope and HTTP request
     final AWSCredentialScope scope = AWSCredentialScope(
       region: region,
       service: AWSService.iot,
-      dateTime: AWSDateTime.now(),
     );
     final AWSHttpRequest request = AWSHttpRequest(
       method: AWSHttpMethod.get,
