@@ -207,6 +207,20 @@ class _PluginWifiConnectWidgetState extends State<PluginWifiConnectWidget> {
       // Make sure device is connected to Arduino AP
       // which is available when IoT device is running the firmware
       // SSID "smartThing" PASS "12345678"
+      final Uri urlCheck = Uri.http('192.168.4.1');
+      final http.Response check = await http.get(urlCheck);
+      if (check.statusCode != 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(context).colorScheme.error,
+            content: Text(
+              context.tr('connection_bottom_sheet_pa_not_connected'),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        return;
+      }
       final Uri urlConnect = Uri.http('192.168.4.1', 'wifi');
       final http.Response response = await http.post(
         urlConnect,
@@ -216,19 +230,21 @@ class _PluginWifiConnectWidgetState extends State<PluginWifiConnectWidget> {
           'pwd': widget.password,
         }),
       );
-      if (response.statusCode >= 300) {
+      if (response.statusCode != 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).colorScheme.error,
             content: Text(response.body, textAlign: TextAlign.center),
           ),
         );
-      }
-      final Uri urlCheck = Uri.http('192.168.4.1');
-      final http.Response connection = await http.get(urlCheck);
-      if (response.statusCode >= 300) {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(connection.body, textAlign: TextAlign.center)),
+          SnackBar(
+            content: Text(
+              context.tr('connection_bottom_sheet_connected'),
+              textAlign: TextAlign.center,
+            ),
+          ),
         );
       }
     }

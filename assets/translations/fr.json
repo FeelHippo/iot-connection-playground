@@ -7,5 +7,6 @@
   "connection_bottom_sheet_password": "Password",
   "connection_bottom_sheet_password_error": "Enter valid password",
   "connection_bottom_sheet_search": "Search for Devices",
+  "connection_bottom_sheet_pa_not_connected": "Please connect to smartThing Hot Spot",
   "connection_bottom_sheet_connected": "Connected to WiFi"
 }
