@@ -49,18 +49,10 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
   // Authentication:
   // Authenticating Requests: Using Query Parameters (AWS Signature Version 4)
   // https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html
-  // Generate a presigned request with the WebSocket library
-  // https://docs.aws.amazon.com/iot-wireless/latest/developerguide/network-analyzer-generate-request.html
-  // Policies for HTTP and WebSocket clients
-  // https://docs.aws.amazon.com/iot/latest/developerguide/pub-sub-policy.html#pub-sub-policy-cognito
   // AWS IoT Core Simplified
   // https://dev.to/slootjes/aws-iot-core-simplified-part-1-permissions-k4d
 
-  // BLOCKER: https://repost.aws/questions/QUrwQ2-a0pTYGDRtNNWtx0qw/mqtt-over-websocket-signature-version-4-http-1-1-403
-  // https://repost.aws/questions/QU-zwByDFvRve57kJEeIu0BQ/generate-a-presigned-url-with-aws-iot-device-sdk-embedded-c
-  // https://repost.aws/questions/QUy0UvJxbHQ2CnooSaimpaXw/iot-credentials-for-aws-403-debug
-  // https://docs.aws.amazon.com/iot/latest/developerguide/authorizing-direct-aws.html
-  // https://aws.amazon.com/blogs/security/how-to-eliminate-the-need-for-hardcoded-aws-credentials-in-devices-by-using-the-aws-iot-credentials-provider/
+  // BLOCKER: https://repost.aws/questions/QUdbcJYpBLRmmwmCss6Irtiw/mqtt-client-over-websocket-403
 
   // useful commands:
   // returns the credential provider's address
@@ -80,12 +72,17 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
 
   // Web Socket Certificate
   // curl --cert 66ce483973c5f09019f455b6140666b54fac452cd1e9c0f129ab24c6488eba73-certificate.pem.crt --key device_cert_key_filename.key -H "x-amzn-iot-thingname: smartThing" https://cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com/role-aliases/SmartThingRoleAlias/credentials
+
   Future<void> _connectToASWWebSocket(BuildContext buildContext) async {
+    // The client id unique to your device
+    // defaults to AWS IoT Device "name"
+    const String clientId = 'smartThing-mezzasegolas@gmail.com';
     const String region = 'eu-west-1';
     const String endpoint = 'a2eqw4se8i5px2-ats.iot.eu-west-1.amazonaws.com';
     const String credentialProvider =
         'cyltlnzsrjwaw.credentials.iot.eu-west-1.amazonaws.com';
 
+    // Credentials Provider
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     final String cert = await rootBundle.loadString(
       'assets/certificates/66ce483973c5f09019f455b6140666b54fac452cd1e9c0f129ab24c6488eba73-certificate.pem.crt',
@@ -105,7 +102,7 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
       headers: <String, String>{'x-amzn-iot-thingname': 'smartThing'},
     );
 
-    // TODO(Filippo): add proper Data Model
+    // TODO(Filippo): add proper Data Model and Json Annotation
     final dynamic parsedBody = jsonDecode(credentials.body);
     final String accessKeyId =
         parsedBody['credentials']['accessKeyId'] as String;
@@ -116,15 +113,16 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
     final AWSCredentials awsCredentials = AWSCredentials(
       accessKeyId,
       secretAccessKey,
-      sessionToken,
     );
 
+    // Signature v4
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     final AWSSigV4Signer signer = AWSSigV4Signer(
       credentialsProvider: AWSCredentialsProvider(awsCredentials),
     );
     // Create the signing scope and HTTP request
     final AWSCredentialScope scope = AWSCredentialScope(
+      dateTime: AWSDateTime.now(),
       region: region,
       service: AWSService.iot,
     );
@@ -136,25 +134,29 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
     const Duration expiration = Duration(seconds: 3600);
 
     // Sign and send the HTTP request
-    final Uri signedRequest = await signer.presign(
-      request,
-      credentialScope: scope,
-      expiresIn: expiration,
+    final Uri signedRequest =
+        await signer.presign(
+            request,
+            credentialScope: scope,
+            expiresIn: expiration,
+          )
+          ..normalizePath();
+
+    // https://github.com/aws/aws-sdk-go/issues/2485
+    final String server = Uri.encodeFull(
+      '$signedRequest&X-Amz-Security-Token=$sessionToken',
     );
+
+    // MQTT client
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // The client id unique to your device
-    // defaults to AWS IoT Device "name"
-    const String clientId = 'smartThing-mezzasegolas@gmail.com';
-
     // Create the client
-    final MqttServerClient client =
-        MqttServerClient(signedRequest.toString(), clientId)
-          ..useWebSocket = true
-          ..useAlternateWebSocketImplementation = true
-          ..port = 443
-          ..logging(on: true)
-          ..keepAlivePeriod = 20;
+    final MqttServerClient client = MqttServerClient(server, clientId)
+      ..useWebSocket = true
+      ..useAlternateWebSocketImplementation = true
+      ..port = 443
+      ..logging(on: true)
+      ..keepAlivePeriod = 20;
 
     /// Create a connection message to use or use the default one. The default one sets the
     /// client identifier, any supplied username/password, the default keepalive interval(60s)

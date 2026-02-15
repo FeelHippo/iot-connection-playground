@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:bluetooth_classic/bluetooth_classic.dart';
 import 'package:bluetooth_classic/models/device.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BlueToothClassicWidget extends StatefulWidget {
@@ -16,6 +16,7 @@ class BlueToothClassicWidget extends StatefulWidget {
 }
 
 class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
+  late String _platformVersion;
   late BluetoothClassic _bluetoothClassicPlugin;
   List<Device> _discoveredDevices = <Device>[];
   late DeviceInfoPlugin _deviceInfo;
@@ -26,8 +27,62 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
     super.initState();
     _bluetoothClassicPlugin = BluetoothClassic();
     _deviceInfo = DeviceInfoPlugin();
+    _initPlatformState();
     _initBluetoothClassic();
     _initDeviceUid();
+    _initDeviceListeners();
+  }
+
+  @override
+  void dispose() {
+    _bluetoothClassicPlugin.disconnect();
+    super.dispose();
+  }
+
+  Future<void> _initPlatformState() async {
+    String platformVersion;
+    try {
+      platformVersion =
+          await _bluetoothClassicPlugin.getPlatformVersion() ??
+          'Unknown platform version';
+    } on PlatformException {
+      platformVersion = 'Failed to get platform version.';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _platformVersion = platformVersion;
+    });
+  }
+
+  Future<void> _initBluetoothClassic() async {
+    // check device permissions
+    await _bluetoothClassicPlugin.initPermissions();
+    _discoveredDevices = <Device>[
+      ..._discoveredDevices,
+      // read already paired devices
+      ...await _bluetoothClassicPlugin.getPairedDevices(),
+    ];
+  }
+
+  Future<void> _initDeviceUid() async {
+    if (Platform.isAndroid) {
+      final AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
+      _deviceUid = androidInfo.id;
+    } else if (Platform.isIOS) {
+      final IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
+      _deviceUid = iosInfo.identifierForVendor!;
+    } else if (Platform.isLinux) {
+      final LinuxDeviceInfo linuxInfo = await _deviceInfo.linuxInfo;
+      _deviceUid = linuxInfo.machineId!;
+    } else if (Platform.isWindows) {
+      final WindowsDeviceInfo windowsInfo = await _deviceInfo.windowsInfo;
+      _deviceUid = windowsInfo.deviceId;
+    }
+  }
+
+  void _initDeviceListeners() {
     _bluetoothClassicPlugin.onDeviceStatusChanged().listen((int event) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -50,33 +105,6 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
         ),
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _bluetoothClassicPlugin.disconnect();
-    super.dispose();
-  }
-
-  Future<void> _initBluetoothClassic() async {
-    await _bluetoothClassicPlugin.initPermissions();
-    _discoveredDevices = <Device>[
-      ..._discoveredDevices,
-      ...await _bluetoothClassicPlugin.getPairedDevices(),
-    ];
-  }
-
-  Future<void> _initDeviceUid() async {
-    if (Platform.isAndroid) {
-      final AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
-      _deviceUid = androidInfo.id;
-    } else if (Platform.isIOS) {
-      final IosDeviceInfo iosInfo = await _deviceInfo.iosInfo;
-      _deviceUid = iosInfo.identifierForVendor!;
-    } else if (Platform.isLinux) {
-      final LinuxDeviceInfo linuxInfo = await _deviceInfo.linuxInfo;
-      _deviceUid = linuxInfo.machineId!;
-    }
   }
 
   @override
@@ -107,9 +135,11 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
 
   Future<void> _connectToBlueTooth() async {
     await _bluetoothClassicPlugin.startScan();
-    _bluetoothClassicPlugin.onDeviceDiscovered().listen((Device event) async {
+    _bluetoothClassicPlugin.onDeviceDiscovered().listen((
+      Device newDevice,
+    ) async {
       // TODO(Filippo): UI to list all available devices
-      _discoveredDevices = <Device>[..._discoveredDevices, event];
+      _discoveredDevices = <Device>[..._discoveredDevices, newDevice];
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -122,7 +152,7 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
       // connect to a device with its MAC address and the application uuid you want to use (in this example, serial)
       try {
         await _bluetoothClassicPlugin.connect(
-          event.address,
+          newDevice.address,
           '00001101-0000-1000-8000-00805f9b34fb',
         );
       } catch (e) {

@@ -15,7 +15,8 @@ class BlueToothLowEnergyWidget extends StatefulWidget {
 }
 
 class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
-  StreamSubscription<BluetoothAdapterState>? _adapterStateStateSubscription;
+  BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
+  late StreamSubscription<BluetoothAdapterState> _adapterStateStateSubscription;
 
   @override
   void initState() {
@@ -23,7 +24,7 @@ class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
     // https://api.flutter.dev/flutter/widgets/AppLifecycleListener-class.html
     AppLifecycleListener(
       onShow: () async {
-        if (await FlutterBluePlus.isSupported == false) {
+        if (!(await FlutterBluePlus.isSupported)) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -38,21 +39,28 @@ class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
         _adapterStateStateSubscription = FlutterBluePlus.adapterState.listen((
           BluetoothAdapterState state,
         ) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              content: Text(state.name, textAlign: TextAlign.center),
-            ),
-          );
+          if (state == BluetoothAdapterState.on) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                content: Text(state.name, textAlign: TextAlign.center),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                backgroundColor: Theme.of(context).colorScheme.error,
+                content: Text(state.name, textAlign: TextAlign.center),
+              ),
+            );
+          }
         });
         if (Platform.isAndroid) {
           await FlutterBluePlus.turnOn();
         }
       },
       onExitRequested: () async {
-        if (_adapterStateStateSubscription != null) {
-          await _adapterStateStateSubscription!.cancel();
-        }
+        await _adapterStateStateSubscription.cancel();
         return AppExitResponse.exit;
       },
     );
@@ -60,9 +68,7 @@ class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
 
   @override
   void dispose() {
-    if (_adapterStateStateSubscription != null) {
-      _adapterStateStateSubscription!.cancel();
-    }
+    _adapterStateStateSubscription.cancel();
     super.dispose();
   }
 
@@ -119,7 +125,7 @@ class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
             SnackBar(
               backgroundColor: Theme.of(context).colorScheme.secondary,
               content: Text(
-                '${service.remoteId}" service UID found!',
+                '${service.remoteId}" service UUID found!',
                 textAlign: TextAlign.center,
               ),
             ),
