@@ -99,8 +99,6 @@ class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
   }
 
   Future<void> _connectToBlueTooth() async {
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     // listen to scan results
     final StreamSubscription<List<ScanResult>>
     subscription = FlutterBluePlus.onScanResults.listen((
@@ -166,15 +164,11 @@ class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
       }
     }, onError: print);
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     // cleanup: cancel subscription when scanning stops
     FlutterBluePlus.cancelWhenScanComplete(subscription);
     // Start scanning w/ timeout
     await FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
     // wait for scanning to stop
     await FlutterBluePlus.isScanning.where((bool val) => val == false).first;
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   }
 }

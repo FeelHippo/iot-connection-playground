@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:giggle/presentation/common/custom_text_form_field.dart';
-import 'package:http/http.dart' as http;
+import 'package:plugin_wifi_connect/plugin_wifi_connect.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PluginWifiConnectWidget extends StatefulWidget {
@@ -204,40 +202,11 @@ class _PluginWifiConnectWidgetState extends State<PluginWifiConnectWidget> {
   Future<void> _searchDevices() async {
     if (_formKey.currentState!.validate()) {
       // TODO(Filippo): add iOs permissions: https://pub.dev/packages/flutter_wifi_connect#permissions
-      // Make sure device is connected to Arduino AP
-      // which is available when IoT device is running the firmware
-      // SSID "smartThing" PASS "12345678"
-      final Uri urlCheck = Uri.http('192.168.4.1');
-      final http.Response check = await http.get(urlCheck);
-      if (check.statusCode != 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text(
-              context.tr('connection_bottom_sheet_pa_not_connected'),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
-        return;
-      }
-      final Uri urlConnect = Uri.http('192.168.4.1', 'wifi');
-      final http.Response response = await http.post(
-        urlConnect,
-        headers: <String, String>{'Content-Type': 'application/json'},
-        body: jsonEncode(<String, String>{
-          'ssid': widget.SSID,
-          'pwd': widget.password,
-        }),
+      final bool? ok = await PluginWifiConnect.connectToSecureNetwork(
+        _ssidController.text,
+        _passwordController.text,
       );
-      if (response.statusCode != 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Theme.of(context).colorScheme.error,
-            content: Text(response.body, textAlign: TextAlign.center),
-          ),
-        );
-      } else {
+      if (ok ?? false) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

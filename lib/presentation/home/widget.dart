@@ -4,7 +4,8 @@ import 'package:giggle/presentation/home/widgets/blue_tooth_classic.dart';
 import 'package:giggle/presentation/home/widgets/blue_tooth_low_energy.dart';
 import 'package:giggle/presentation/home/widgets/mqtt_client_aws_iot_core.dart';
 import 'package:giggle/presentation/home/widgets/mqtt_client_aws_websocket.dart';
-import 'package:giggle/presentation/home/widgets/plugin_wifi_connect.dart';
+import 'package:giggle/presentation/home/widgets/wifi_access_point.dart';
+import 'package:giggle/presentation/home/widgets/wifi_connect.dart';
 
 class HomeWidget extends StatelessWidget {
   const HomeWidget({super.key});
@@ -13,6 +14,7 @@ class HomeWidget extends StatelessWidget {
   static const String password = 'kbno4mwf4Uaavwtp';
   static List<Widget> widgetsWiFi = <Widget>[
     const PluginWifiConnectWidget(SSID: SSID, password: password),
+    const WifiAccessPointWidget(SSID: SSID, password: password),
   ];
   static List<Widget> widgetsMQTT = <Widget>[
     const MqttClientAwsIotCoreWidget(),

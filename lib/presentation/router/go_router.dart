@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:giggle/presentation/common/app_scaffold.dart';
 import 'package:giggle/presentation/common/circular_progress_bar.dart';
 import 'package:giggle/presentation/home/screen.dart';
-import 'package:giggle/presentation/login/screen.dart';
-import 'package:giggle/presentation/onboarding/intro/screen.dart';
 import 'package:giggle/presentation/profile/screen.dart';
-import 'package:giggle/presentation/registration/screen.dart';
 import 'package:go_router/go_router.dart';
 
 final ValueNotifier<RoutingConfig> routingConfig = ValueNotifier<RoutingConfig>(
@@ -24,24 +21,6 @@ final ValueNotifier<RoutingConfig> routingConfig = ValueNotifier<RoutingConfig>(
 final GoRouter router = GoRouter.routingConfig(
   routingConfig: routingConfig,
   initialLocation: '/',
-);
-
-final RoutingConfig unauthorizedRoutingConfig = RoutingConfig(
-  routes: <RouteBase>[
-    GoRoute(path: '/', builder: (_, __) => const IntroScreen()),
-    GoRoute(
-      path: '/register',
-      builder: (BuildContext context, GoRouterState state) {
-        return const RegistrationScreen();
-      },
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return const LoginScreen();
-      },
-    ),
-  ],
 );
 
 RoutingConfig authorizedRoutingConfig({Color? selectedItemColor}) {

@@ -16,11 +16,11 @@ class BlueToothClassicWidget extends StatefulWidget {
 }
 
 class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
-  late String _platformVersion;
+  String? _platformVersion;
+  String? _deviceUid;
   late BluetoothClassic _bluetoothClassicPlugin;
   List<Device> _discoveredDevices = <Device>[];
   late DeviceInfoPlugin _deviceInfo;
-  late String _deviceUid;
 
   @override
   void initState() {
@@ -114,9 +114,11 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         InkWell(
-          child: const Text(
-            'Bluetooth Classic',
-            style: TextStyle(fontSize: 20),
+          child: Text(
+            _platformVersion != null && _deviceUid != null
+                ? 'Platform Version: $_platformVersion ~~ Device UID: $_deviceUid'
+                : 'Bluetooth Classic',
+            style: const TextStyle(fontSize: 20),
           ),
           onTap: () => launchUrl(
             Uri.parse('https://pub.dev/packages/bluetooth_classic'),
@@ -149,7 +151,8 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
           ),
         ),
       );
-      // connect to a device with its MAC address and the application uuid you want to use (in this example, serial)
+      // connect to a device with its MAC address
+      // and the application uuid you want to use (in this example, serial)
       try {
         await _bluetoothClassicPlugin.connect(
           newDevice.address,
@@ -163,11 +166,9 @@ class _BlueToothClassicWidgetWidgetState extends State<BlueToothClassicWidget> {
           ),
         );
       }
-      // NB: I'm not doing error checking or seeing if the device is still connected in this code, check the [example folder](/example/lib/main.dart) for a more thorough demonstration
       // send data to device
       await _bluetoothClassicPlugin.write('ping');
     });
-    // when you want to stop scanning
     await _bluetoothClassicPlugin.stopScan();
   }
 }

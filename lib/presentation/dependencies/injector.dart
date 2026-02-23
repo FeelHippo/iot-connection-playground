@@ -3,12 +3,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:giggle/bloc/auth/auth_bloc.dart';
-import 'package:giggle/bloc/locales/cubit.dart';
-import 'package:giggle/bloc/login/cubit.dart';
-import 'package:giggle/bloc/registration/cubit.dart';
 import 'package:giggle/presentation/dependencies/modules/app_module.dart';
-import 'package:giggle/presentation/dependencies/modules/bloc_module.dart';
 import 'package:giggle/presentation/dependencies/modules/data_module.dart';
 import 'package:giggle/presentation/dependencies/modules/domain_module.dart';
 import 'package:giggle/presentation/dependencies/modules/network_module.dart';
@@ -68,12 +63,6 @@ class IOC {
     _registerSingleton<AuthenticationRepository>(
       DomainModule.createAuthenticationRepository,
     );
-
-    /// Blocs
-    _registerDependency<LocaleCubit>(BlocModule.createLocaleCubit);
-    _registerSingleton<AuthBloc>(BlocModule.createAuthBloc);
-    _registerSingleton<LoginCubit>(BlocModule.createLoginCubit);
-    _registerSingleton<RegistrationCubit>(BlocModule.createRegistrationCubit);
   }
 
   void _registerSingleton<T>(

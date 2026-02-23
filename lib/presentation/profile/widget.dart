@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:giggle/bloc/auth/auth_bloc.dart';
 import 'package:giggle/presentation/common/app_scaffold.dart';
 
 class ProfileWidget extends StatelessWidget {
@@ -13,9 +11,7 @@ class ProfileWidget extends StatelessWidget {
         child: FloatingActionButton(
           key: const Key('logout'),
           child: const Icon(Icons.time_to_leave),
-          onPressed: () {
-            BlocProvider.of<AuthBloc>(context).add(SignOutAuthEvent());
-          },
+          onPressed: () {},
         ),
       ),
     );
