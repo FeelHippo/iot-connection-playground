@@ -1,14 +1,9 @@
-import 'package:apiClient/main.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:giggle/presentation/dependencies/modules/app_module.dart';
 import 'package:giggle/presentation/dependencies/modules/data_module.dart';
-import 'package:giggle/presentation/dependencies/modules/domain_module.dart';
-import 'package:giggle/presentation/dependencies/modules/network_module.dart';
 import 'package:injector/injector.dart';
-import 'package:storage/main.dart';
 
 /// Inversion of Control
 /// https://stackoverflow.com/a/3140/10708345
@@ -35,34 +30,13 @@ class IOC {
   final IOC? parent;
 
   void _initDependencies() {
-    /// Api Clients
-    _registerSingleton<Dio>(NetworkModule.createDio);
-    _registerSingleton<ApiClient>(NetworkModule.createApiClient);
-
     /// Storage
     _registerSingleton<FlutterSecureStorage>(
       DataModule.createFlutterSecureStorage,
     );
-    _registerSingleton<UserPreferences>(DataModule.createUserPreferences);
-
-    /// Data Providers
-    _registerSingleton<AuthProvider>(DataModule.createAuthProvider);
-    _registerSingleton<AuthenticationProvider>(
-      DataModule.createAuthenticationProvider,
-    );
-    _registerSingleton<LocaleProviderInterface>(
-      DataModule.createLocaleStorageProvider,
-    );
 
     /// App UI
     _registerSingleton<Connectivity>(AppModule.createConnectivity);
-
-    /// Repositories
-    _registerSingleton<UserRepository>(DomainModule.createUserRepository);
-    _registerSingleton<AuthRepository>(DomainModule.createAuthRepository);
-    _registerSingleton<AuthenticationRepository>(
-      DomainModule.createAuthenticationRepository,
-    );
   }
 
   void _registerSingleton<T>(
