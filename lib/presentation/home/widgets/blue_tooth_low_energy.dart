@@ -15,7 +15,7 @@ class BlueToothLowEnergyWidget extends StatefulWidget {
 }
 
 class _BlueToothLowEnergyWidgetState extends State<BlueToothLowEnergyWidget> {
-  BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
+  final BluetoothAdapterState _adapterState = BluetoothAdapterState.unknown;
   late StreamSubscription<BluetoothAdapterState> _adapterStateStateSubscription;
 
   @override
