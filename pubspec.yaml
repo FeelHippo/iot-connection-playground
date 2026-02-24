@@ -32,11 +32,12 @@ dependencies:
   bluetooth_classic: ^0.0.4
   device_info_plus: ^11.5.0
   http: ^1.6.0
+  web_socket_channel: ^3.0.3
 
 dev_dependencies:
   build_runner: ^2.4.8
   flutter_lints: ^2.0.1
-  json_serializable: ^6.7.1
+  json_serializable: ^6.13.0
   lints: ^2.0.1
   very_good_analysis: ^3.1.0
 flutter:

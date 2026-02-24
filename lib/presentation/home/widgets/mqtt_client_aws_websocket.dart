@@ -6,11 +6,11 @@ import 'package:aws_common/aws_common.dart';
 import 'package:aws_signature_v4/aws_signature_v4.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:giggle/presentation/home/models/credentials.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
-import 'package:mqtt5_client/mqtt5_client.dart';
-import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class MqttClientAwsWebSocketWidget extends StatelessWidget {
   const MqttClientAwsWebSocketWidget({super.key});
@@ -102,14 +102,14 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
       headers: <String, String>{'x-amzn-iot-thingname': 'smartThing'},
     );
 
-    // TODO(Filippo): add proper Data Model and Json Annotation
-    final dynamic parsedBody = jsonDecode(credentials.body);
-    final String accessKeyId =
-        parsedBody['credentials']['accessKeyId'] as String;
-    final String secretAccessKey =
-        parsedBody['credentials']['secretAccessKey'] as String;
-    final String sessionToken =
-        parsedBody['credentials']['sessionToken'] as String;
+    final Credentials credentialsBody = Credentials.fromJson(
+      jsonDecode(credentials.body) as Map<String, dynamic>,
+    );
+
+    if (credentialsBody.credentials == null) return;
+    final String accessKeyId = credentialsBody.credentials!.accessKeyId;
+    final String secretAccessKey = credentialsBody.credentials!.secretAccessKey;
+    final String sessionToken = credentialsBody.credentials!.sessionToken;
     final AWSCredentials awsCredentials = AWSCredentials(
       accessKeyId,
       secretAccessKey,
@@ -143,7 +143,7 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
           ..normalizePath();
 
     // https://github.com/aws/aws-sdk-go/issues/2485
-    final String server = Uri.encodeFull(
+    final Uri server = Uri.parse(
       '$signedRequest&X-Amz-Security-Token=$sessionToken',
     );
 
@@ -151,68 +151,51 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // Create the client
-    final MqttServerClient client = MqttServerClient(server, clientId)
-      ..useWebSocket = true
-      ..useAlternateWebSocketImplementation = true
-      ..port = 443
-      ..logging(on: true)
-      ..keepAlivePeriod = 20;
+    late WebSocketChannel channel = WebSocketChannel.connect(server);
 
-    /// Create a connection message to use or use the default one. The default one sets the
-    /// client identifier, any supplied username/password, the default keepalive interval(60s)
-    /// and clean session, an example of a specific one below.
-    /// Add some user properties, these may be available in the connect acknowledgement.
-    /// Note there are many options selectable on this message, if you opt to use authentication please see
-    /// the example in mqtt5_server_client_authenticate.dart.
-    final MqttConnectMessage connMess = MqttConnectMessage()
-        .withClientIdentifier(clientId)
-        .startClean();
-    client.connectionMessage = connMess;
-
-    /// Connect the client, any errors here are communicated by raising of the appropriate exception. Note
-    /// in some circumstances the broker will just disconnect us, see the spec about this, we however will
-    /// never send malformed messages.
     try {
-      await client.connect();
-    } on MqttNoConnectionException catch (e) {
-      // Raised by the client when connection fails.
-      client.disconnect();
-    } on SocketException catch (e) {
-      // Raised by the socket layer
-      client.disconnect();
-    }
-
-    if (client.connectionStatus!.state != MqttConnectionState.connected) {
-      client.disconnect();
-      return;
-    }
-
-    const String topic = 'sdk/test/dart'; // Not a wildcard topic
-    client.subscribe(topic, MqttQos.atMostOnce);
-
-    /// The client has a change notifier object(see the Observable class) which we then listen to to get
-    /// notifications of published updates to each subscribed topic.
-    client.updates.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
-      final MqttPublishMessage recMess = c![0].payload! as MqttPublishMessage;
-      final String pt = MqttUtilities.bytesToStringAsString(
-        recMess.payload.message!,
-      );
+      channel = WebSocketChannel.connect(server);
+      await channel.ready;
       ScaffoldMessenger.of(buildContext).showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(buildContext).colorScheme.secondary,
-          content: Text(pt, textAlign: TextAlign.center),
+          content: const Text(
+            'Successfully connected to WebSocket',
+            textAlign: TextAlign.center,
+          ),
         ),
       );
-    });
+    } catch (e) {
+      ScaffoldMessenger.of(buildContext).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(buildContext).colorScheme.error,
+          content: Text(e.toString(), textAlign: TextAlign.center),
+        ),
+      );
+    }
 
-    final MqttPayloadBuilder builder = MqttPayloadBuilder()
-      ..addString('{ "message": "Hello World" }');
+    const String topic = 'sdk/test/dart';
 
-    client.publishMessage(topic, MqttQos.exactlyOnce, builder.payload!);
-
-    await MqttUtilities.asyncSleep(120);
-
-    // client.unsubscribeStringTopic(topic);
-    // client.disconnect();
+    channel.stream.listen(
+      (dynamic data) {
+        ScaffoldMessenger.of(buildContext).showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(buildContext).colorScheme.secondary,
+            content: const Text(
+              'Successfully connected to WebSocket',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      },
+      onError: (dynamic error) {
+        ScaffoldMessenger.of(buildContext).showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(buildContext).colorScheme.error,
+            content: Text('$error', textAlign: TextAlign.center),
+          ),
+        );
+      },
+    );
   }
 }
