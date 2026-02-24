@@ -21,12 +21,6 @@ dependencies:
   flutter_dotenv: ^6.0.0
   passkeys: ^2.16.0
   plugin_wifi_connect: ^2.0.1
-
-  apiClient:
-    path: packages/api_client
-
-  storage:
-    path: packages/storage
   url_launcher: ^6.3.2
   mqtt5_client: ^4.15.2
   pem: ^2.0.6

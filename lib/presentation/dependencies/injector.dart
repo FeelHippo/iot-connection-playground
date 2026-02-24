@@ -1,8 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:giggle/presentation/dependencies/modules/app_module.dart';
-import 'package:giggle/presentation/dependencies/modules/data_module.dart';
 import 'package:injector/injector.dart';
 
 /// Inversion of Control
@@ -30,11 +28,6 @@ class IOC {
   final IOC? parent;
 
   void _initDependencies() {
-    /// Storage
-    _registerSingleton<FlutterSecureStorage>(
-      DataModule.createFlutterSecureStorage,
-    );
-
     /// App UI
     _registerSingleton<Connectivity>(AppModule.createConnectivity);
   }

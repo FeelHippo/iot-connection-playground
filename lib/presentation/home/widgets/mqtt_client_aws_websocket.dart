@@ -59,7 +59,7 @@ class MqttClientAwsWebSocketWidget extends StatelessWidget {
   // aws iot describe-endpoint --endpoint-type iot:CredentialProvider
   // returns the IoT Role Alias => check if the IAM role is used
   // aws iot describe-role-alias --role-alias smartThingAdminRoleAlias
-  // reutrns the IAM Role
+  // returns the IAM Role
   // aws iam get-role --role-name smartThingAdminRole
   // obtain your AWS account-specific endpoint for the credentials provider
   // aws iot describe-endpoint --endpoint-type iot:CredentialProvider
